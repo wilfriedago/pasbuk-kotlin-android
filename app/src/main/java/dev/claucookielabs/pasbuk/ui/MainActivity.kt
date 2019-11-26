@@ -45,6 +45,4 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
-class PassesAdapter {
-
-}
+class PassesAdapter

@@ -5,7 +5,6 @@ buildscript {
     repositories {
         google()
         jcenter()
-        
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.2'
@@ -14,13 +13,16 @@ buildscript {
         // in the individual module build.gradle files
     }
 }
+plugins {
+    id "io.gitlab.arturbosch.detekt" version "1.0.0"
+}
 
 allprojects {
     repositories {
         google()
         jcenter()
-        
     }
+    apply from: "$rootDir/detekt.gradle"
 }
 
 task clean(type: Delete) {
