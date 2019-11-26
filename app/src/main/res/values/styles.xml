@@ -6,6 +6,9 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-    </style>
+        <item name="android:colorBackground">@color/colorPrimary</item>
+        <item name="colorError">@color/colorAccent</item>
 
+        <!-- Add Dark them https://material.io/develop/android/theming/dark/ -->
+    </style>
 </resources>
