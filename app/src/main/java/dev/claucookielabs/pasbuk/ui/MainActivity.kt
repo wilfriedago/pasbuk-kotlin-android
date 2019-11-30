@@ -2,7 +2,12 @@ package dev.claucookielabs.pasbuk.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
+import androidx.recyclerview.widget.LinearLayoutManager
 import dev.claucookielabs.pasbuk.R
+import dev.claucookielabs.pasbuk.model.PassesRepository
+import kotlinx.android.synthetic.main.activity_main.*
 
 /**
  * This class will display a list of currently valid passes.
@@ -20,6 +25,7 @@ import dev.claucookielabs.pasbuk.R
 class MainActivity : AppCompatActivity() {
 
     private lateinit var passAdapter: PassesAdapter
+    private val passesRepository = PassesRepository()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,14 +41,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        // Setup the adapter and the layout manager (vertical)
         passAdapter = PassesAdapter()
+        passes_rv.apply {
+            layoutManager = LinearLayoutManager(this@MainActivity)
+            adapter = passAdapter
+            addItemDecoration(DividerItemDecoration(context, VERTICAL))
+        }
     }
 
     private fun loadPasses() {
-        // Request passes to the local storage (assets/passes  for now)
-        // Update the UI with the result
+        // Load mock passes for now
+        val passes = passesRepository.mockPasses()
+        passAdapter.passes = passes
+        passAdapter.notifyDataSetChanged()
     }
+
 }
 
-class PassesAdapter

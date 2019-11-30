@@ -65,4 +65,8 @@ data class Passbook(
     val stripImage: String? = null,
     val thumbnailImage: String? = null,
     val pkpassFile: String
-)
+) {
+    val headers: List<InfoField>
+        // Since we are hardcoding the passes for now, we know it is a boarding pass
+        get() = boardingPass!!.headerFields
+}

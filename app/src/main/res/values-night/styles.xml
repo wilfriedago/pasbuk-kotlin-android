@@ -8,7 +8,15 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:colorBackground">@color/colorPrimary</item>
         <item name="colorError">@color/colorAccent</item>
-
         <!-- Add Dark them https://material.io/develop/android/theming/dark/ -->
+    </style>
+
+    <style name="Body1" parent="TextAppearance.AppCompat.Body2">
+        <item name="android:fontFamily">@font/product_sans</item>
+        <item name="fontFamily">@font/product_sans</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:letterSpacing">0.0178571429</item>
     </style>
 </resources>
