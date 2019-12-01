@@ -1,11 +1,13 @@
 package dev.claucookielabs.pasbuk.ui
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
 import androidx.recyclerview.widget.LinearLayoutManager
 import dev.claucookielabs.pasbuk.R
+import dev.claucookielabs.pasbuk.model.Passbook
 import dev.claucookielabs.pasbuk.model.PassesRepository
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -24,7 +26,7 @@ import kotlinx.android.synthetic.main.activity_main.*
  */
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var passAdapter: PassesAdapter
+    private val passAdapter = PassesAdapter() { openPass(it) }
     private val passesRepository = PassesRepository()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,12 +43,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        passAdapter = PassesAdapter()
         passes_rv.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = passAdapter
             addItemDecoration(DividerItemDecoration(context, VERTICAL))
         }
+    }
+
+    private fun openPass(pass: Passbook) {
+        val intent = Intent(this, PassDetailActivity::class.java)
+        startActivity(intent)
     }
 
     private fun loadPasses() {

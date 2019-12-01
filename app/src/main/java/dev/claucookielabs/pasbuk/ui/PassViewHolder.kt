@@ -10,10 +10,14 @@ import androidx.core.text.buildSpannedString
 import androidx.recyclerview.widget.RecyclerView
 import dev.claucookielabs.pasbuk.R
 import dev.claucookielabs.pasbuk.model.Passbook
+import dev.claucookielabs.pasbuk.ui.extensions.addRipple
 import kotlinx.android.synthetic.main.item_view_pass.view.*
 
 
-class PassViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class PassViewHolder(
+    itemView: View,
+    private val onClickAction: (Passbook) -> Unit
+) : RecyclerView.ViewHolder(itemView) {
 
     fun bind(pass: Passbook) {
         pass.headers.forEach { header ->
@@ -28,6 +32,10 @@ class PassViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 headerText,
                 layoutParams
             )
+            itemView.addRipple()
+            itemView.setOnClickListener {
+                onClickAction(pass)
+            }
         }
     }
 
