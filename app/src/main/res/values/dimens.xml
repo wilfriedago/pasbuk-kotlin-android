@@ -10,7 +10,7 @@
     <dimen name="image_small_height">56dp</dimen>
     <dimen name="image_normal_height">100dp</dimen>
     <dimen name="image_big_height">200dp</dimen>
-    <dimen name="cardview_radius">2dp</dimen>
+    <dimen name="cardview_radius">4dp</dimen>
 
     <!-- spacing -->
     <dimen name="tiny_spacing">4dp</dimen>
