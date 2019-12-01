@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- toolbar -->
     <dimen name="toolbar_height">48dp</dimen>
     <dimen name="toolbar_icon_height">24dp</dimen>
     <dimen name="toolbar_logo_height">28dp</dimen>
-    <dimen name="icon_height">32dp</dimen>
+
+    <!-- other components size -->
+    <dimen name="image_tiny_height">32dp</dimen>
+    <dimen name="image_small_height">56dp</dimen>
+    <dimen name="image_normal_height">100dp</dimen>
+    <dimen name="image_big_height">200dp</dimen>
+    <dimen name="cardview_radius">2dp</dimen>
+
+    <!-- spacing -->
     <dimen name="tiny_spacing">4dp</dimen>
     <dimen name="regular_spacing">16dp</dimen>
 </resources>

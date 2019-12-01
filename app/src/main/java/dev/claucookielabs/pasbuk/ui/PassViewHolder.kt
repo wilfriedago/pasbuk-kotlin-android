@@ -11,6 +11,7 @@ import androidx.core.text.buildSpannedString
 import androidx.core.text.scale
 import androidx.recyclerview.widget.RecyclerView
 import dev.claucookielabs.pasbuk.R
+import dev.claucookielabs.pasbuk.model.InfoField
 import dev.claucookielabs.pasbuk.model.Passbook
 import dev.claucookielabs.pasbuk.ui.extensions.addRipple
 import kotlinx.android.synthetic.main.item_view_pass.view.*
@@ -24,12 +25,7 @@ class PassViewHolder(
     fun bind(pass: Passbook) {
         pass.headers.forEach { header ->
             val layoutParams = createHeaderLayoutParams()
-            val headerText = createHeaderTextView()
-
-            headerText.text = buildSpannedString {
-                bold { appendln(header.label) }
-                scale(1.3f) { append(header.value) }
-            }
+            val headerText = createHeaderTextView(header)
             itemView.pass_row_headers.addView(
                 headerText,
                 layoutParams
@@ -51,11 +47,15 @@ class PassViewHolder(
         return layoutParams
     }
 
-    private fun createHeaderTextView(): TextView {
+    private fun createHeaderTextView(header: InfoField): TextView {
         val headerText = TextView(itemView.context, null, 0, R.style.Body1)
         headerText.gravity = Gravity.END
         headerText.textAlignment = View.TEXT_ALIGNMENT_VIEW_END
         headerText.typeface = ResourcesCompat.getFont(itemView.context, R.font.product_sans)
+        headerText.text = buildSpannedString {
+            bold { appendln(header.label) }
+            scale(1.3f) { append(header.value) }
+        }
         return headerText
     }
 }

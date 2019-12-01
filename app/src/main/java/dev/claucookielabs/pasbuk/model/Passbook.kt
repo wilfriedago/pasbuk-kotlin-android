@@ -73,4 +73,17 @@ data class Passbook(
     val headers: List<InfoField>
         // Since we are hardcoding the passes for now, we know it is a boarding pass
         get() = boardingPass!!.headerFields
+
+    val primaryFields: List<InfoField>
+        // Since we are hardcoding the passes for now, we know it is a boarding pass
+        get() = boardingPass!!.primaryFields
+    val secondaryFields: List<InfoField>
+        // Since we are hardcoding the passes for now, we know it is a boarding pass
+        get() = boardingPass!!.secondaryFields
+    val backFields: List<InfoField>
+        // Since we are hardcoding the passes for now, we know it is a boarding pass
+        get() = boardingPass!!.backFields
+    val auxiliaryFields: List<InfoField>
+        // Since we are hardcoding the passes for now, we know it is a boarding pass
+        get() = boardingPass!!.auxiliaryFields
 }
