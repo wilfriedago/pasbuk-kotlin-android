@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="toolbar_height">48dp</dimen>
-    <dimen name="icon_height">24dp</dimen>
+    <dimen name="toolbar_icon_height">24dp</dimen>
+    <dimen name="toolbar_logo_height">28dp</dimen>
+    <dimen name="icon_height">32dp</dimen>
+    <dimen name="tiny_spacing">4dp</dimen>
     <dimen name="regular_spacing">16dp</dimen>
 </resources>

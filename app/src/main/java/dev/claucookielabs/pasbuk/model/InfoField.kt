@@ -1,5 +1,8 @@
 package dev.claucookielabs.pasbuk.model
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
 /**
  * This class represent a field of information relevant to the pass.
  *
@@ -19,6 +22,7 @@ package dev.claucookielabs.pasbuk.model
  * NSDateFormatterMediumStyle, NSDateFormatterLongStyle, NSDateFormatterFullStyle
  * @property timeStyle The format for the time.
  */
+@Parcelize
 data class InfoField(
     val key: String,
     val value: String,
@@ -30,7 +34,7 @@ data class InfoField(
     val textAlignment: TextAlignment = TextAlignment.Natural,
     val dateStyle: DateStyle = DateStyle.ShortStyle,
     val timeStyle: String? = null
-)
+) : Parcelable
 
 enum class TextAlignment(val alignmentName: String) {
     Left("PKTextAlignmentLeft"),

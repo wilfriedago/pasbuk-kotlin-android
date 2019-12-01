@@ -1,5 +1,8 @@
 package dev.claucookielabs.pasbuk.model
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
 /**
  * This class represents all the information contained in a Passbook file.
  *
@@ -37,6 +40,7 @@ package dev.claucookielabs.pasbuk.model
  * @property thumbnailImage Image url used for generic passes.
  * @property pkpassFile Path url to access the pkpass file.
  */
+@Parcelize
 data class Passbook(
     val formatVersion: Int,
     val serialNumber: String,
@@ -65,7 +69,7 @@ data class Passbook(
     val stripImage: String? = null,
     val thumbnailImage: String? = null,
     val pkpassFile: String
-) {
+) : Parcelable {
     val headers: List<InfoField>
         // Since we are hardcoding the passes for now, we know it is a boarding pass
         get() = boardingPass!!.headerFields

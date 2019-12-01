@@ -38,8 +38,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupToolbar() {
-        // Transparent toolbar like Google Podcasts with title in the middle
-        // and menu button on the right hand.
+        setSupportActionBar(tool_bar)
+        supportActionBar?.title = ""
     }
 
     private fun setupRecyclerView() {
@@ -52,6 +52,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun openPass(pass: Passbook) {
         val intent = Intent(this, PassDetailActivity::class.java)
+        intent.putExtra(Passbook::class.java.name, pass)
         startActivity(intent)
     }
 
@@ -63,4 +64,3 @@ class MainActivity : AppCompatActivity() {
     }
 
 }
-

@@ -1,5 +1,8 @@
 package dev.claucookielabs.pasbuk.model
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
 /**
  * This class represents the information about the barcode
  *
@@ -11,9 +14,10 @@ package dev.claucookielabs.pasbuk.model
  * @property altText If known, text displayed near the barcode. For example,
  * a human-readable version of the barcode data in case the barcode doesn’t scan.
  */
+@Parcelize
 data class Barcode(
     private var format: String,
     private var message: String,
     private var messageEncoding: String,
     private var altText: String? = ""
-)
+) : Parcelable

@@ -59,47 +59,47 @@
     <!-- Italic -->
     <font
         android:font="@font/productsans_black_italic"
-        android:fontStyle="normal"
+        android:fontStyle="italic"
         android:fontWeight="400"
 
         app:font="@font/productsans_black_italic"
-        app:fontStyle="normal"
+        app:fontStyle="italic"
         app:fontWeight="400" />
 
     <font
         android:font="@font/productsans_bold_italic"
-        android:fontStyle="normal"
+        android:fontStyle="italic"
         android:fontWeight="400"
 
         app:font="@font/productsans_bold_italic"
-        app:fontStyle="normal"
+        app:fontStyle="italic"
         app:fontWeight="400" />
 
     <font
         android:font="@font/productsans_light_italic"
-        android:fontStyle="normal"
+        android:fontStyle="italic"
         android:fontWeight="400"
 
         app:font="@font/productsans_light_italic"
-        app:fontStyle="normal"
+        app:fontStyle="italic"
         app:fontWeight="400" />
 
     <font
         android:font="@font/productsans_medium_italic"
-        android:fontStyle="normal"
+        android:fontStyle="italic"
         android:fontWeight="400"
 
         app:font="@font/productsans_medium_italic"
-        app:fontStyle="normal"
+        app:fontStyle="italic"
         app:fontWeight="400" />
 
     <font
         android:font="@font/productsans_italic"
-        android:fontStyle="normal"
+        android:fontStyle="italic"
         android:fontWeight="400"
 
         app:font="@font/productsans_italic"
-        app:fontStyle="normal"
+        app:fontStyle="italic"
         app:fontWeight="400" />
 
 </font-family>

@@ -5,8 +5,10 @@ import android.view.View
 import android.view.ViewGroup.LayoutParams
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
+import androidx.core.text.scale
 import androidx.recyclerview.widget.RecyclerView
 import dev.claucookielabs.pasbuk.R
 import dev.claucookielabs.pasbuk.model.Passbook
@@ -26,7 +28,7 @@ class PassViewHolder(
 
             headerText.text = buildSpannedString {
                 bold { appendln(header.label) }
-                append(header.value)
+                scale(1.3f) { append(header.value) }
             }
             itemView.pass_row_headers.addView(
                 headerText,
@@ -50,10 +52,10 @@ class PassViewHolder(
     }
 
     private fun createHeaderTextView(): TextView {
-        val headerText = TextView(itemView.context)
+        val headerText = TextView(itemView.context, null, 0, R.style.Body1)
         headerText.gravity = Gravity.END
         headerText.textAlignment = View.TEXT_ALIGNMENT_VIEW_END
-        headerText.setTextAppearance(R.style.Body1)
+        headerText.typeface = ResourcesCompat.getFont(itemView.context, R.font.product_sans)
         return headerText
     }
 }

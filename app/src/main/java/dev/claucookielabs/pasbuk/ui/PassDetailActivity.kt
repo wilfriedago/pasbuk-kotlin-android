@@ -1,8 +1,11 @@
 package dev.claucookielabs.pasbuk.ui
 
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import dev.claucookielabs.pasbuk.R
+import dev.claucookielabs.pasbuk.model.Passbook
+import kotlinx.android.synthetic.main.activity_pass_detail.*
 
 /**
  * This class will display the relevant information about the pass:
@@ -22,5 +25,29 @@ class PassDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pass_detail)
+        setupToolbar()
+        val passbook = intent.getParcelableExtra<Passbook>(Passbook::class.java.name)!!
+        renderPass(passbook)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun setupToolbar() {
+        setSupportActionBar(tool_bar)
+        supportActionBar?.title = ""
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeButtonEnabled(true)
+    }
+
+    private fun renderPass(passbook: Passbook) {
+
     }
 }

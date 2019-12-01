@@ -1,5 +1,8 @@
 package dev.claucookielabs.pasbuk.model
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
 
 /**
  * This class represents group of fields the pass can contain.
@@ -13,6 +16,7 @@ package dev.claucookielabs.pasbuk.model
  * Type of transit. Must be one of the following values:
  * PKTransitTypeAir, PKTransitTypeBoat, PKTransitTypeBus, PKTransitTypeGeneric,PKTransitTypeTrain.
  */
+@Parcelize
 data class PassInfo(
     val headerFields: List<InfoField>,
     val primaryFields: List<InfoField>,
@@ -20,7 +24,7 @@ data class PassInfo(
     val backFields: List<InfoField>,
     val auxiliaryFields: List<InfoField>,
     val transitType: TransitType
-)
+) : Parcelable
 
 enum class TransitType(typeName: String) {
     Air("PKTransitTypeAir"),
