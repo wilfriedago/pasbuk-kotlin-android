@@ -1,4 +1,4 @@
-package dev.claucookielabs.pasbuk.ui
+package dev.claucookielabs.pasbuk.ui.list
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,7 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import dev.claucookielabs.pasbuk.R
 import dev.claucookielabs.pasbuk.model.Passbook
 import dev.claucookielabs.pasbuk.model.PassesRepository
-import kotlinx.android.synthetic.main.activity_main.*
+import dev.claucookielabs.pasbuk.ui.detail.PassDetailActivity
+import kotlinx.android.synthetic.main.activity_pass_list.*
 
 /**
  * This class will display a list of currently valid passes.
@@ -21,17 +22,17 @@ import kotlinx.android.synthetic.main.activity_main.*
  * and a few quick actions. The quick action can be Archived/Expired passes.
  *
  * @startuml
- * MainActivity --|> AppCompatActivity
+ * PassListActivity --|> AppCompatActivity
  * @enduml
  */
-class MainActivity : AppCompatActivity() {
+class PassListActivity : AppCompatActivity() {
 
     private val passAdapter = PassesAdapter() { openPass(it) }
     private val passesRepository = PassesRepository()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_pass_list)
         setupToolbar()
         setupRecyclerView()
         loadPasses()
@@ -44,7 +45,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         passes_rv.apply {
-            layoutManager = LinearLayoutManager(this@MainActivity)
+            layoutManager = LinearLayoutManager(this@PassListActivity)
             adapter = passAdapter
             addItemDecoration(DividerItemDecoration(context, VERTICAL))
         }

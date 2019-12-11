@@ -1,4 +1,4 @@
-package dev.claucookielabs.pasbuk.ui
+package dev.claucookielabs.pasbuk.ui.list
 
 import android.view.Gravity
 import android.view.View
@@ -54,8 +54,10 @@ class PassViewHolder(
         headerText.typeface = ResourcesCompat.getFont(itemView.context, R.font.product_sans)
         headerText.text = buildSpannedString {
             bold { appendln(header.label) }
-            scale(1.3f) { append(header.value) }
+            scale(SCALE_FACTOR) { append(header.value) }
         }
         return headerText
     }
 }
+
+private const val SCALE_FACTOR = 1.3f

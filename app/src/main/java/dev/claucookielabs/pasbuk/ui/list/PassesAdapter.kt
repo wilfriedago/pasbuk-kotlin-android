@@ -1,4 +1,4 @@
-package dev.claucookielabs.pasbuk.ui
+package dev.claucookielabs.pasbuk.ui.list
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

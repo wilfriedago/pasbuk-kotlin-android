@@ -1,4 +1,4 @@
-package dev.claucookielabs.pasbuk.ui
+package dev.claucookielabs.pasbuk.ui.detail
 
 import android.os.Bundle
 import android.view.MenuItem
@@ -74,7 +74,7 @@ class PassDetailActivity : AppCompatActivity() {
         headerText.typeface = ResourcesCompat.getFont(this, R.font.product_sans)
         headerText.text = buildSpannedString {
             bold { appendln(field.label.trimEnd()) }
-            scale(1.3f) { append(field.value.trimEnd()) }
+            scale(SCALE_FACTOR) { append(field.value.trimEnd()) }
         }
         return headerText
     }
@@ -88,3 +88,5 @@ class PassDetailActivity : AppCompatActivity() {
         }
     }
 }
+
+private const val SCALE_FACTOR = 1.3f
