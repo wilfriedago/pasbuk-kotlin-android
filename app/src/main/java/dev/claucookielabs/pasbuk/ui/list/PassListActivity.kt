@@ -2,13 +2,14 @@ package dev.claucookielabs.pasbuk.ui.list
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
 import androidx.recyclerview.widget.LinearLayoutManager
 import dev.claucookielabs.pasbuk.R
 import dev.claucookielabs.pasbuk.model.Passbook
-import dev.claucookielabs.pasbuk.model.PassesRepository
 import dev.claucookielabs.pasbuk.ui.detail.PassDetailActivity
 import kotlinx.android.synthetic.main.activity_pass_list.*
 
@@ -27,15 +28,16 @@ import kotlinx.android.synthetic.main.activity_pass_list.*
  */
 class PassListActivity : AppCompatActivity() {
 
-    private val passAdapter = PassesAdapter() { openPass(it) }
-    private val passesRepository = PassesRepository()
+    private val passAdapter = PassesAdapter { openPass(it) }
+    // Extension function to pass the viewmodel factory and instantiate the viewmodel
+    private val viewModel by viewModels<PassListViewModel> { PassListViewModelFactory() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pass_list)
         setupToolbar()
         setupRecyclerView()
-        loadPasses()
+        viewModel.data.observe(this, Observer(::updateUi))
     }
 
     private fun setupToolbar() {
@@ -57,11 +59,17 @@ class PassListActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun loadPasses() {
-        // Load mock passes for now
-        val passes = passesRepository.mockPasses()
-        passAdapter.passes = passes
-        passAdapter.notifyDataSetChanged()
+    private fun updateUi(uiModel: PassListViewModel.UiModel) {
+        when (uiModel) {
+            is PassListViewModel.UiModel.Loading -> {
+            }
+            is PassListViewModel.UiModel.Error -> {
+            }
+            is PassListViewModel.UiModel.Content -> {
+                passAdapter.passes = uiModel.passes
+                passAdapter.notifyDataSetChanged()
+            }
+        }
     }
 
 }
