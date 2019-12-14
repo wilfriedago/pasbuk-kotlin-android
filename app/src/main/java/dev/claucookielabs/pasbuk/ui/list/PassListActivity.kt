@@ -10,7 +10,9 @@ import androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
 import androidx.recyclerview.widget.LinearLayoutManager
 import dev.claucookielabs.pasbuk.R
 import dev.claucookielabs.pasbuk.model.Passbook
+import dev.claucookielabs.pasbuk.model.PassesListUiModel
 import dev.claucookielabs.pasbuk.ui.detail.PassDetailActivity
+import dev.claucookielabs.pasbuk.ui.extensions.show
 import kotlinx.android.synthetic.main.activity_pass_list.*
 
 /**
@@ -59,16 +61,14 @@ class PassListActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun updateUi(uiModel: PassListViewModel.UiModel) {
-        when (uiModel) {
-            is PassListViewModel.UiModel.Loading -> {
-            }
-            is PassListViewModel.UiModel.Error -> {
-            }
-            is PassListViewModel.UiModel.Content -> {
-                passAdapter.passes = uiModel.passes
-                passAdapter.notifyDataSetChanged()
-            }
+    private fun updateUi(passesListUiModel: PassesListUiModel) {
+        loading_view.show(passesListUiModel is PassesListUiModel.Loading)
+        error_view.show(passesListUiModel is PassesListUiModel.Error)
+        passes_rv.show(passesListUiModel is PassesListUiModel.Content)
+
+        if (passesListUiModel is PassesListUiModel.Content) {
+            passAdapter.passes = passesListUiModel.passes
+            passAdapter.notifyDataSetChanged()
         }
     }
 
