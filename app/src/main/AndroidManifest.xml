@@ -10,14 +10,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".ui.MainActivity">
+        <activity android:name=".ui.list.PassListActivity" />
+        <activity android:name=".ui.detail.PassDetailActivity" />
+
+        <activity-alias
+            android:name=".ui.MainActivity"
+            android:targetActivity=".ui.list.PassListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <activity android:name=".ui.PassDetailActivity" />
+        </activity-alias>
     </application>
-
 </manifest>

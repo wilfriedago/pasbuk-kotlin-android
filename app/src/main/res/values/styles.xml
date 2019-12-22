@@ -4,12 +4,13 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/blue3</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:colorBackground">@color/colorPrimary</item>
         <item name="colorError">@color/colorAccent</item>
         <item name="android:fontFamily">@font/product_sans</item>
         <item name="fontFamily">@font/product_sans</item>
+        <item name="android:textColor">@color/textColorPrimary</item>
         <!-- Add Dark them https://material.io/develop/android/theming/dark/ -->
     </style>
 
