@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import dev.claucookielabs.pasbuk.R
 import dev.claucookielabs.pasbuk.model.Passbook
 
-class PassesAdapter(
+class PassListAdapter(
     private val onItemClickAction: (Passbook) -> Unit
 ) : RecyclerView.Adapter<PassViewHolder>() {
 
