@@ -48,9 +48,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+            app:items="@{viewmodel.passes}"
             tools:itemCount="4"
-            tools:listitem="@layout/item_view_pass"
-            app:passes="@{viewmodel.data}"/>
+            tools:listitem="@layout/item_view_pass"/>
 
         <ProgressBar
             android:id="@+id/loading_view"
