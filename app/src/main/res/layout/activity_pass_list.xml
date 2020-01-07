@@ -59,13 +59,13 @@
             android:layout_width="@dimen/toolbar_height"
             android:layout_height="@dimen/toolbar_height"
             android:layout_gravity="center"
-            app:visible="@{viewmodel.loading}" />
+            app:loading="@{viewmodel.data}" />
 
         <FrameLayout
             android:id="@+id/error_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:visible="@{viewmodel.error}">
+            app:failed="@{viewmodel.data}">
 
             <TextView
                 style="@style/Body1"

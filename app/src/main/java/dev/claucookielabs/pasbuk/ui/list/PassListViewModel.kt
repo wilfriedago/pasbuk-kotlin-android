@@ -13,32 +13,29 @@ import kotlinx.coroutines.withContext
 
 class PassListViewModel(private val passesRepository: PassesRepository) : ViewModel() {
 
-    private val _loading = MutableLiveData<Boolean>()
-    val loading: LiveData<Boolean>
-        get() = _loading
-
-    private val _data = MutableLiveData<List<Passbook>>()
-    val data: LiveData<List<Passbook>>
+    private val _data = MutableLiveData<PassesUiModel>()
+    val data: LiveData<PassesUiModel>
         get() = _data
-
-    private val _error = MutableLiveData<Boolean>()
-    val error: LiveData<Boolean>
-        get() = _error
 
 
     fun refresh() {
         GlobalScope.launch(Dispatchers.Main) {
-            _loading.value = true
+            _data.value = PassesUiModel.Loading
             try {
-                _error.value = false
-                _data.value = withContext(Dispatchers.IO) { passesRepository.mockPasses() }
+                _data.value =
+                    withContext(Dispatchers.IO) { PassesUiModel.Content(passesRepository.mockPasses()) }
             } catch (exception: IllegalStateException) {
-                _data.value = emptyList()
-                _error.value = true
+                _data.value = PassesUiModel.Error
             }
-            _loading.value = false
         }
     }
+
+}
+
+sealed class PassesUiModel {
+    data class Content(val passes: List<Passbook>) : PassesUiModel()
+    object Loading : PassesUiModel()
+    object Error : PassesUiModel()
 
 }
 
