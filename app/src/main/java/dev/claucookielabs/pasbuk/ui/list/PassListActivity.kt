@@ -28,26 +28,29 @@ import kotlinx.android.synthetic.main.activity_pass_list.*
  */
 class PassListActivity : AppCompatActivity() {
 
-    private val passAdapter = PassListAdapter { openPass(it) }
+    private val passesAdapter = PassListAdapter { openPass(it) }
     // Extension function to pass the viewmodel factory and instantiate the viewmodel
-    private val viewModel by viewModels<PassListViewModel> { PassListViewModelFactory() }
+    private val passesViewModel by viewModels<PassListViewModel> { PassListViewModelFactory() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupDataBinding()
         setupToolbar()
-        viewModel.refresh()
+        passesViewModel.refresh()
     }
 
     private fun setupDataBinding() {
         val binding: ActivityPassListBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_pass_list)
-        binding.viewmodel = viewModel
-        binding.lifecycleOwner = this
-        binding.passesRv.apply {
-            addItemDecoration(DividerItemDecoration(context, VERTICAL))
+        binding.apply {
+            viewmodel = passesViewModel
+            lifecycleOwner = this@PassListActivity
+            passesRv.apply {
+                addItemDecoration(DividerItemDecoration(context, VERTICAL))
+            }
+            passesRv.adapter = passesAdapter
         }
-        binding.passesRv.adapter = passAdapter
+
     }
 
     private fun setupToolbar() {
