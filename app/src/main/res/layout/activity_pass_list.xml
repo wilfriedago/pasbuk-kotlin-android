@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewmodel"
             type="dev.claucookielabs.pasbuk.ui.list.PassListViewModel" />
@@ -47,16 +48,18 @@
             android:id="@+id/passes_rv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:items="@{viewmodel.data}"
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
-            app:items="@{viewmodel.passes}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:itemCount="4"
-            tools:listitem="@layout/item_view_pass"/>
+            tools:listitem="@layout/item_view_pass" />
 
         <ProgressBar
             android:id="@+id/loading_view"
             android:layout_width="@dimen/toolbar_height"
             android:layout_height="@dimen/toolbar_height"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            app:visible="@{viewmodel.loading}" />
 
         <FrameLayout
             android:id="@+id/error_view"

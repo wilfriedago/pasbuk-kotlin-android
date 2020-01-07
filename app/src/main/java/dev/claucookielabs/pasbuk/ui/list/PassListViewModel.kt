@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import dev.claucookielabs.pasbuk.model.Passbook
 import dev.claucookielabs.pasbuk.model.PassesRepository
-import dev.claucookielabs.pasbuk.model.PassesListUiModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -14,20 +13,19 @@ import kotlinx.coroutines.withContext
 
 class PassListViewModel(private val passesRepository: PassesRepository) : ViewModel() {
 
-    private val _passes = MutableLiveData<List<Passbook>>()
-    val passes: LiveData<List<Passbook>> get() = _passes
+    private val _loading = MutableLiveData<Boolean>()
+    val loading: LiveData<Boolean>
+        get() = _loading
 
-    private val _data = MutableLiveData<PassesListUiModel>()
-    val data: LiveData<PassesListUiModel>
-        get() {
-            if (_data.value == null) refresh()
-            return _data
-        }
+    private val _data = MutableLiveData<List<Passbook>>()
+    val data: LiveData<List<Passbook>>
+        get() = _data
 
-    private fun refresh() {
+    fun refresh() {
         GlobalScope.launch(Dispatchers.Main) {
-            _data.value = PassesListUiModel.Loading
+            _loading.value = true
             _data.value = withContext(Dispatchers.IO) { passesRepository.mockPasses() }
+            _loading.value = false
         }
     }
 

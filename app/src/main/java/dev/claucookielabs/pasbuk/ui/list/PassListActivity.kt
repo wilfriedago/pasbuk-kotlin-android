@@ -7,13 +7,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
-import androidx.recyclerview.widget.LinearLayoutManager
 import dev.claucookielabs.pasbuk.R
 import dev.claucookielabs.pasbuk.databinding.ActivityPassListBinding
 import dev.claucookielabs.pasbuk.model.Passbook
-import dev.claucookielabs.pasbuk.model.PassesListUiModel
 import dev.claucookielabs.pasbuk.ui.detail.PassDetailActivity
-import dev.claucookielabs.pasbuk.ui.extensions.show
 import kotlinx.android.synthetic.main.activity_pass_list.*
 
 /**
@@ -39,17 +36,18 @@ class PassListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setupDataBinding()
         setupToolbar()
+        viewModel.refresh()
     }
 
     private fun setupDataBinding() {
-        val binding : ActivityPassListBinding = DataBindingUtil.setContentView( this, R.layout.activity_pass_list)
+        val binding: ActivityPassListBinding =
+            DataBindingUtil.setContentView(this, R.layout.activity_pass_list)
         binding.viewmodel = viewModel
         binding.lifecycleOwner = this
         binding.passesRv.apply {
-            layoutManager = LinearLayoutManager(this@PassListActivity)
-            adapter = passAdapter
             addItemDecoration(DividerItemDecoration(context, VERTICAL))
         }
+        binding.passesRv.adapter = passAdapter
     }
 
     private fun setupToolbar() {
@@ -62,11 +60,4 @@ class PassListActivity : AppCompatActivity() {
         intent.putExtra(Passbook::class.java.name, pass)
         startActivity(intent)
     }
-
-    private fun updateUi(passesListUiModel: PassesListUiModel) {
-        loading_view.show(passesListUiModel is PassesListUiModel.Loading)
-        error_view.show(passesListUiModel is PassesListUiModel.Error)
-        passes_rv.show(passesListUiModel is PassesListUiModel.Content)
-    }
-
 }
