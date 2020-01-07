@@ -49,8 +49,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:items="@{viewmodel.data}"
-            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
             tools:itemCount="4"
             tools:listitem="@layout/item_view_pass" />
 
@@ -64,7 +64,8 @@
         <FrameLayout
             android:id="@+id/error_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            app:visible="@{viewmodel.error}">
 
             <TextView
                 style="@style/Body1"

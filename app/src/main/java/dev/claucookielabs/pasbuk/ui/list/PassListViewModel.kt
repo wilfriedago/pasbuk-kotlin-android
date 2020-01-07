@@ -21,10 +21,21 @@ class PassListViewModel(private val passesRepository: PassesRepository) : ViewMo
     val data: LiveData<List<Passbook>>
         get() = _data
 
+    private val _error = MutableLiveData<Boolean>()
+    val error: LiveData<Boolean>
+        get() = _error
+
+
     fun refresh() {
         GlobalScope.launch(Dispatchers.Main) {
             _loading.value = true
-            _data.value = withContext(Dispatchers.IO) { passesRepository.mockPasses() }
+            try {
+                _error.value = false
+                _data.value = withContext(Dispatchers.IO) { passesRepository.mockPasses() }
+            } catch (exception: IllegalStateException) {
+                _data.value = emptyList()
+                _error.value = true
+            }
             _loading.value = false
         }
     }
