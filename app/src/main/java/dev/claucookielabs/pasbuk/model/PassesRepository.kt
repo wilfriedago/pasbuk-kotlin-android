@@ -1,15 +1,10 @@
 package dev.claucookielabs.pasbuk.model
 
-import kotlin.random.Random
-
 class PassesRepository {
 
     fun mockPasses(): List<Passbook> {
         // Playing a bit with error cases before connecting to real backend
-        return when (Random.nextInt(0, 2)) {
-            0 -> throw IllegalStateException()
-            else -> listOfPasses()
-        }
+        return listOfPasses()
     }
 
     @SuppressWarnings("LongMethod")

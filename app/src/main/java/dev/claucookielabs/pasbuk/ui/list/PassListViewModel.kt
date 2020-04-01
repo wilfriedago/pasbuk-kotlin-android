@@ -3,11 +3,10 @@ package dev.claucookielabs.pasbuk.ui.list
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import dev.claucookielabs.pasbuk.model.Passbook
 import dev.claucookielabs.pasbuk.model.PassesRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -19,15 +18,15 @@ class PassListViewModel(private val passesRepository: PassesRepository) : ViewMo
 
 
     fun refresh() {
-        GlobalScope.launch(Dispatchers.Main) {
+        viewModelScope.launch {
             _data.value = PassesUiModel.Loading
-            try {
-                _data.value =
-                    withContext(Dispatchers.IO) { PassesUiModel.Content(passesRepository.mockPasses()) }
-            } catch (exception: IllegalStateException) {
-                _data.value = PassesUiModel.Error
-            }
+            val result = withContext(IO) { PassesUiModel.Content(passesRepository.mockPasses()) }
+            handleResult(result)
         }
+    }
+
+    private fun handleResult(result: PassesUiModel) {
+        _data.value = result
     }
 
 }
@@ -37,11 +36,4 @@ sealed class PassesUiModel {
     object Loading : PassesUiModel()
     object Error : PassesUiModel()
 
-}
-
-@Suppress("UNCHECKED_CAST")
-class PassListViewModelFactory : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return PassListViewModel(PassesRepository()) as T
-    }
 }

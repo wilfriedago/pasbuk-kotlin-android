@@ -14,6 +14,8 @@ import dev.claucookielabs.pasbuk.model.InfoField
 import dev.claucookielabs.pasbuk.model.Passbook
 import dev.claucookielabs.pasbuk.model.TextAlignment
 import kotlinx.android.synthetic.main.activity_pass_detail.*
+import org.koin.androidx.scope.lifecycleScope
+import org.koin.androidx.viewmodel.scope.viewModel
 
 /**
  * This class will display the relevant information about the pass:
@@ -29,6 +31,8 @@ import kotlinx.android.synthetic.main.activity_pass_detail.*
  * @enduml
  */
 class PassDetailActivity : AppCompatActivity() {
+
+    private val viewModel : PassDetailViewModel by lifecycleScope.viewModel(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
