@@ -1,4 +1,4 @@
-package dev.claucookielabs.pasbuk.ui.detail
+package dev.claucookielabs.pasbuk.passdetail.presentation
 
 import androidx.lifecycle.ViewModel
 

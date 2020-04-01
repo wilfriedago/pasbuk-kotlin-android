@@ -1,4 +1,4 @@
-package dev.claucookielabs.pasbuk.ui.detail
+package dev.claucookielabs.pasbuk.passdetail.presentation.ui
 
 import android.os.Bundle
 import android.view.MenuItem
@@ -10,9 +10,10 @@ import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
 import androidx.core.text.scale
 import dev.claucookielabs.pasbuk.R
-import dev.claucookielabs.pasbuk.model.InfoField
-import dev.claucookielabs.pasbuk.model.Passbook
-import dev.claucookielabs.pasbuk.model.TextAlignment
+import dev.claucookielabs.pasbuk.common.domain.model.InfoField
+import dev.claucookielabs.pasbuk.common.domain.model.Passbook
+import dev.claucookielabs.pasbuk.common.domain.model.TextAlignment
+import dev.claucookielabs.pasbuk.passdetail.presentation.PassDetailViewModel
 import kotlinx.android.synthetic.main.activity_pass_detail.*
 import org.koin.androidx.scope.lifecycleScope
 import org.koin.androidx.viewmodel.scope.viewModel
@@ -32,7 +33,7 @@ import org.koin.androidx.viewmodel.scope.viewModel
  */
 class PassDetailActivity : AppCompatActivity() {
 
-    private val viewModel : PassDetailViewModel by lifecycleScope.viewModel(this)
+    private val viewModel: PassDetailViewModel by lifecycleScope.viewModel(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,32 +60,32 @@ class PassDetailActivity : AppCompatActivity() {
         supportActionBar?.setHomeButtonEnabled(true)
     }
 
-    private fun renderPass(passbook: Passbook) {
-        passbook.primaryFields.forEach {
+    private fun renderPass(networkPassbook: Passbook) {
+        networkPassbook.primaryFields.forEach {
             fields_box.addView(
                 createFieldTextView(it)
             )
         }
-        passbook.secondaryFields.forEach {
+        networkPassbook.secondaryFields.forEach {
             fields_box.addView(
                 createFieldTextView(it)
             )
         }
     }
 
-    private fun createFieldTextView(field: InfoField): TextView {
+    private fun createFieldTextView(fieldNetwork: InfoField): TextView {
         val headerText = TextView(this, null, 0, R.style.Body1)
-        headerText.textAlignment = getTextAlignment(field)
+        headerText.textAlignment = getTextAlignment(fieldNetwork)
         headerText.typeface = ResourcesCompat.getFont(this, R.font.product_sans)
         headerText.text = buildSpannedString {
-            bold { appendln(field.label.trimEnd()) }
-            scale(SCALE_FACTOR) { append(field.value.trimEnd()) }
+            bold { appendln(fieldNetwork.label.trimEnd()) }
+            scale(SCALE_FACTOR) { append(fieldNetwork.value.trimEnd()) }
         }
         return headerText
     }
 
-    private fun getTextAlignment(field: InfoField): Int {
-        return when (field.textAlignment) {
+    private fun getTextAlignment(fieldNetwork: InfoField): Int {
+        return when (fieldNetwork.textAlignment) {
             TextAlignment.Left -> View.TEXT_ALIGNMENT_VIEW_START
             TextAlignment.Center -> View.TEXT_ALIGNMENT_CENTER
             TextAlignment.Right -> View.TEXT_ALIGNMENT_VIEW_END

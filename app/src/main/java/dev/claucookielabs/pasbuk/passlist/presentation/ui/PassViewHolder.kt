@@ -1,4 +1,4 @@
-package dev.claucookielabs.pasbuk.ui.list
+package dev.claucookielabs.pasbuk.passlist.presentation.ui
 
 import android.view.Gravity
 import android.view.View
@@ -11,9 +11,9 @@ import androidx.core.text.buildSpannedString
 import androidx.core.text.scale
 import androidx.recyclerview.widget.RecyclerView
 import dev.claucookielabs.pasbuk.R
-import dev.claucookielabs.pasbuk.model.InfoField
-import dev.claucookielabs.pasbuk.model.Passbook
-import dev.claucookielabs.pasbuk.ui.extensions.addRipple
+import dev.claucookielabs.pasbuk.common.domain.model.InfoField
+import dev.claucookielabs.pasbuk.common.domain.model.Passbook
+import dev.claucookielabs.pasbuk.common.presentation.utils.addRipple
 import kotlinx.android.synthetic.main.item_view_pass.view.*
 
 

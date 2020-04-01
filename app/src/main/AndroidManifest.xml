@@ -11,12 +11,12 @@
         android:theme="@style/AppTheme"
         android:name=".App">
 
-        <activity android:name=".ui.list.PassListActivity" />
-        <activity android:name=".ui.detail.PassDetailActivity" />
+        <activity android:name=".passlist.presentation.ui.PassListActivity" />
+        <activity android:name=".passdetail.presentation.ui.PassDetailActivity" />
 
         <activity-alias
             android:name=".ui.MainActivity"
-            android:targetActivity=".ui.list.PassListActivity">
+            android:targetActivity=".passlist.presentation.ui.PassListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

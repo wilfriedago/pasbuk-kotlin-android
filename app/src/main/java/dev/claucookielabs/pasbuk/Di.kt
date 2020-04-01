@@ -1,10 +1,11 @@
 package dev.claucookielabs.pasbuk
 
-import dev.claucookielabs.pasbuk.model.PassesRepository
-import dev.claucookielabs.pasbuk.ui.detail.PassDetailActivity
-import dev.claucookielabs.pasbuk.ui.detail.PassDetailViewModel
-import dev.claucookielabs.pasbuk.ui.list.PassListActivity
-import dev.claucookielabs.pasbuk.ui.list.PassListViewModel
+import dev.claucookielabs.pasbuk.common.data.repository.PassesRepository
+import dev.claucookielabs.pasbuk.passdetail.presentation.PassDetailViewModel
+import dev.claucookielabs.pasbuk.passdetail.presentation.ui.PassDetailActivity
+import dev.claucookielabs.pasbuk.passlist.domain.GetAllPasses
+import dev.claucookielabs.pasbuk.passlist.presentation.PassListViewModel
+import dev.claucookielabs.pasbuk.passlist.presentation.ui.PassListActivity
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -28,6 +29,7 @@ private val appModule = module {
 private val scopedModule = module {
     scope(named<PassListActivity>()) {
         viewModel { PassListViewModel(get()) }
+        scoped { GetAllPasses(get()) }
     }
 
     scope(named<PassDetailActivity>()) {

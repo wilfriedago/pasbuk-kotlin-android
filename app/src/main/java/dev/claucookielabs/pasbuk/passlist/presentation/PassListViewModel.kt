@@ -1,16 +1,19 @@
-package dev.claucookielabs.pasbuk.ui.list
+package dev.claucookielabs.pasbuk.passlist.presentation
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dev.claucookielabs.pasbuk.model.Passbook
-import dev.claucookielabs.pasbuk.model.PassesRepository
+import dev.claucookielabs.pasbuk.common.domain.BaseRequest
+import dev.claucookielabs.pasbuk.common.domain.model.Passbook
+import dev.claucookielabs.pasbuk.passlist.domain.GetAllPasses
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class PassListViewModel(private val passesRepository: PassesRepository) : ViewModel() {
+class PassListViewModel(
+    private val getAllPasses: GetAllPasses
+) : ViewModel() {
 
     private val _data = MutableLiveData<PassesUiModel>()
     val data: LiveData<PassesUiModel>
@@ -19,8 +22,11 @@ class PassListViewModel(private val passesRepository: PassesRepository) : ViewMo
 
     fun refresh() {
         viewModelScope.launch {
-            _data.value = PassesUiModel.Loading
-            val result = withContext(IO) { PassesUiModel.Content(passesRepository.mockPasses()) }
+            _data.value =
+                PassesUiModel.Loading
+            val result = withContext(IO) {
+                PassesUiModel.Content(getAllPasses.execute(BaseRequest()))
+            }
             handleResult(result)
         }
     }

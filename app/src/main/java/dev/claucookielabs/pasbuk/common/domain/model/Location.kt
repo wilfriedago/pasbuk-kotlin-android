@@ -1,4 +1,4 @@
-package dev.claucookielabs.pasbuk.model
+package dev.claucookielabs.pasbuk.common.domain.model
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
@@ -11,8 +11,13 @@ import kotlinx.android.parcel.Parcelize
  * @property relevantText Extra information about the location: e.g. the name of the venue
  */
 @Parcelize
-data class Location(
+open class Location(
     val latitude: Double,
     val longitude: Double,
     val relevantText: String? = null
 ) : Parcelable
+
+@Parcelize
+class EmptyLocation : Location(
+    0.0, 0.0
+)

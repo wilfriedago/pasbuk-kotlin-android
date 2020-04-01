@@ -1,4 +1,4 @@
-package dev.claucookielabs.pasbuk.model
+package dev.claucookielabs.pasbuk.common.domain.model
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
@@ -20,7 +20,7 @@ import kotlinx.android.parcel.Parcelize
  * The web service must use the HTTPS protocol; the leading https:// is included in the value of this key.
  * @property organizationName The name of the organization who issued the pass.
  * @property description
- * @property barcode
+ * @property Barcode
  * @property locations
  * @property maxDistance
  * @property relevantDate
@@ -51,7 +51,7 @@ data class Passbook(
     val organizationName: String,
     val description: String? = null,
     val barcode: Barcode? = null,
-    val locations: Location? = null,
+    val location: Location? = null,
     val maxDistance: Int? = null,
     val relevantDate: String? = null,
     val updateDate: Long? = null,
@@ -59,11 +59,11 @@ data class Passbook(
     val foregroundColor: String? = null,
     val labelColor: String? = null,
     val logoText: String? = null,
-    val boardingPass: PassInfo? = null,
-    val coupon: PassInfo? = null,
-    val event: PassInfo? = null,
-    val generic: PassInfo? = null,
-    val storeCard: PassInfo? = null,
+    val boardingPass: Pass? = null,
+    val coupon: Pass? = null,
+    val event: Pass? = null,
+    val generic: Pass? = null,
+    val storeCard: Pass? = null,
     val logoImage: String? = null,
     val backgroundImage: String? = null,
     val stripImage: String? = null,

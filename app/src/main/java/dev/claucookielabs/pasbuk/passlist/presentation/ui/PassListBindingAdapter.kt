@@ -1,9 +1,10 @@
-package dev.claucookielabs.pasbuk.ui.list
+package dev.claucookielabs.pasbuk.passlist.presentation.ui
 
 import android.view.View
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import dev.claucookielabs.pasbuk.passlist.presentation.PassesUiModel
 
 @BindingAdapter("items")
 fun RecyclerView.setItems(passesUiModel: PassesUiModel?) {

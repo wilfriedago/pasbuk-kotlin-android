@@ -1,4 +1,4 @@
-package dev.claucookielabs.pasbuk.model
+package dev.claucookielabs.pasbuk.common.domain.model
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
@@ -34,7 +34,16 @@ data class InfoField(
     val textAlignment: TextAlignment = TextAlignment.Natural,
     val dateStyle: DateStyle = DateStyle.ShortStyle,
     val timeStyle: String? = null
-) : Parcelable
+) : Parcelable {
+
+    companion object {
+        val EMPTY = InfoField(
+            key = "",
+            value = "",
+            label = ""
+        )
+    }
+}
 
 enum class TextAlignment(val alignmentName: String) {
     Left("PKTextAlignmentLeft"),

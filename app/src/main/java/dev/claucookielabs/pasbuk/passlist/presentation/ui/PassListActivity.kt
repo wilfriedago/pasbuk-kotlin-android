@@ -1,4 +1,4 @@
-package dev.claucookielabs.pasbuk.ui.list
+package dev.claucookielabs.pasbuk.passlist.presentation.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,13 +7,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
 import dev.claucookielabs.pasbuk.R
+import dev.claucookielabs.pasbuk.common.domain.model.Passbook
 import dev.claucookielabs.pasbuk.databinding.ActivityPassListBinding
-import dev.claucookielabs.pasbuk.model.Passbook
-import dev.claucookielabs.pasbuk.ui.detail.PassDetailActivity
+import dev.claucookielabs.pasbuk.passdetail.presentation.ui.PassDetailActivity
+import dev.claucookielabs.pasbuk.passlist.presentation.PassListViewModel
 import kotlinx.android.synthetic.main.activity_pass_list.*
-import org.koin.androidx.scope.currentScope
 import org.koin.androidx.scope.lifecycleScope
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.androidx.viewmodel.scope.viewModel
 
 /**
@@ -31,7 +30,12 @@ import org.koin.androidx.viewmodel.scope.viewModel
  */
 class PassListActivity : AppCompatActivity() {
 
-    private val passesAdapter = PassListAdapter { openPass(it) }
+    private val passesAdapter =
+        PassListAdapter {
+            openPass(
+                it
+            )
+        }
     private val passesViewModel: PassListViewModel by lifecycleScope.viewModel(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {

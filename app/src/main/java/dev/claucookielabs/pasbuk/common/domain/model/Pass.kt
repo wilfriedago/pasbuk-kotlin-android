@@ -1,4 +1,4 @@
-package dev.claucookielabs.pasbuk.model
+package dev.claucookielabs.pasbuk.common.domain.model
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
@@ -17,7 +17,7 @@ import kotlinx.android.parcel.Parcelize
  * PKTransitTypeAir, PKTransitTypeBoat, PKTransitTypeBus, PKTransitTypeGeneric,PKTransitTypeTrain.
  */
 @Parcelize
-data class PassInfo(
+data class Pass(
     val headerFields: List<InfoField>,
     val primaryFields: List<InfoField>,
     val secondaryFields: List<InfoField>,
