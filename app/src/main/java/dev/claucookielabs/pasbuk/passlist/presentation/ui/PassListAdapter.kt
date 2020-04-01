@@ -1,10 +1,10 @@
-package dev.claucookielabs.pasbuk.ui.list
+package dev.claucookielabs.pasbuk.passlist.presentation.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import dev.claucookielabs.pasbuk.R
-import dev.claucookielabs.pasbuk.model.Passbook
+import dev.claucookielabs.pasbuk.common.domain.model.Passbook
 
 class PassListAdapter(
     private val onItemClickAction: (Passbook) -> Unit
@@ -18,7 +18,10 @@ class PassListAdapter(
             parent,
             false
         )
-        return PassViewHolder(itemView, onItemClickAction)
+        return PassViewHolder(
+            itemView,
+            onItemClickAction
+        )
     }
 
     override fun getItemCount(): Int = passes.size

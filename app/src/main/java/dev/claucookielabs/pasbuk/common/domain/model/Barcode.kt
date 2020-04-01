@@ -1,4 +1,4 @@
-package dev.claucookielabs.pasbuk.model
+package dev.claucookielabs.pasbuk.common.domain.model
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
@@ -20,4 +20,14 @@ data class Barcode(
     private var message: String,
     private var messageEncoding: String,
     private var altText: String? = ""
-) : Parcelable
+) : Parcelable {
+
+    companion object {
+        val EMPTY = Barcode(
+            "",
+            "",
+            "",
+            ""
+        )
+    }
+}

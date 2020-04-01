@@ -1,4 +1,4 @@
-package dev.claucookielabs.pasbuk.ui.extensions
+package dev.claucookielabs.pasbuk.common.presentation.utils
 
 import android.util.TypedValue
 import android.view.View
