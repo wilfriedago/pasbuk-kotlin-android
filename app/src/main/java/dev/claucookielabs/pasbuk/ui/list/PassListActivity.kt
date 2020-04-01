@@ -4,15 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
-import androidx.recyclerview.widget.LinearLayoutManager
 import dev.claucookielabs.pasbuk.R
+import dev.claucookielabs.pasbuk.databinding.ActivityPassListBinding
 import dev.claucookielabs.pasbuk.model.Passbook
-import dev.claucookielabs.pasbuk.model.PassesListUiModel
 import dev.claucookielabs.pasbuk.ui.detail.PassDetailActivity
-import dev.claucookielabs.pasbuk.ui.extensions.show
 import kotlinx.android.synthetic.main.activity_pass_list.*
 
 /**
@@ -30,16 +28,29 @@ import kotlinx.android.synthetic.main.activity_pass_list.*
  */
 class PassListActivity : AppCompatActivity() {
 
-    private val passAdapter = PassesAdapter { openPass(it) }
+    private val passesAdapter = PassListAdapter { openPass(it) }
     // Extension function to pass the viewmodel factory and instantiate the viewmodel
-    private val viewModel by viewModels<PassListViewModel> { PassListViewModelFactory() }
+    private val passesViewModel by viewModels<PassListViewModel> { PassListViewModelFactory() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_pass_list)
+        setupDataBinding()
         setupToolbar()
-        setupRecyclerView()
-        viewModel.data.observe(this, Observer(::updateUi))
+        passesViewModel.refresh()
+    }
+
+    private fun setupDataBinding() {
+        val binding: ActivityPassListBinding =
+            DataBindingUtil.setContentView(this, R.layout.activity_pass_list)
+        binding.apply {
+            viewmodel = passesViewModel
+            lifecycleOwner = this@PassListActivity
+            passesRv.apply {
+                addItemDecoration(DividerItemDecoration(context, VERTICAL))
+            }
+            passesRv.adapter = passesAdapter
+        }
+
     }
 
     private fun setupToolbar() {
@@ -47,29 +58,9 @@ class PassListActivity : AppCompatActivity() {
         supportActionBar?.title = ""
     }
 
-    private fun setupRecyclerView() {
-        passes_rv.apply {
-            layoutManager = LinearLayoutManager(this@PassListActivity)
-            adapter = passAdapter
-            addItemDecoration(DividerItemDecoration(context, VERTICAL))
-        }
-    }
-
     private fun openPass(pass: Passbook) {
         val intent = Intent(this, PassDetailActivity::class.java)
         intent.putExtra(Passbook::class.java.name, pass)
         startActivity(intent)
     }
-
-    private fun updateUi(passesListUiModel: PassesListUiModel) {
-        loading_view.show(passesListUiModel is PassesListUiModel.Loading)
-        error_view.show(passesListUiModel is PassesListUiModel.Error)
-        passes_rv.show(passesListUiModel is PassesListUiModel.Content)
-
-        if (passesListUiModel is PassesListUiModel.Content) {
-            passAdapter.passes = passesListUiModel.passes
-            passAdapter.notifyDataSetChanged()
-        }
-    }
-
 }
