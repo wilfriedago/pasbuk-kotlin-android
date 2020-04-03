@@ -13,11 +13,11 @@ sealed class IntentScheme(open val uri: Uri) {
     val filename: String
         get() = uri.lastPathSegment ?: ""
 
-    open fun isInsideServer() = false
+    open fun isStoredInServer() = false
 
 
     data class Http(override val uri: Uri) : IntentScheme(uri) {
-        override fun isInsideServer(): Boolean = Patterns.WEB_URL.matcher(uri.toString()).matches()
+        override fun isStoredInServer(): Boolean = Patterns.WEB_URL.matcher(uri.toString()).matches()
     }
 
     data class Scheme(override val uri: Uri) : IntentScheme(uri)
