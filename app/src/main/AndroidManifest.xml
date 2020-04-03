@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="dev.claucookielabs.pasbuk">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -13,7 +16,6 @@
 
         <activity android:name=".passlist.presentation.ui.PassListActivity" />
         <activity android:name=".passdetail.presentation.ui.PassDetailActivity" />
-        <activity android:name=".passdownload.presentation.ui.PassDownloadActivity" />
 
         <activity-alias
             android:name=".ui.MainActivity"
@@ -24,9 +26,8 @@
             </intent-filter>
         </activity-alias>
 
-        <activity-alias
-            android:name=".ui.DownloadActivity"
-            android:targetActivity=".passdownload.presentation.ui.PassDownloadActivity">
+
+        <activity android:name=".passdownload.presentation.ui.PassDownloadActivity">
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -112,6 +113,12 @@
                     android:scheme="file" />
             </intent-filter>
 
-        </activity-alias>
+        </activity>
+
+        <service
+            android:name=".passdownload.services.PassDownloadService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
     </application>
 </manifest>
