@@ -7,17 +7,18 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import com.google.gson.Gson
 import dev.claucookielabs.pasbuk.R
+import dev.claucookielabs.pasbuk.common.data.datasource.network.model.NetworkPassbook
 import dev.claucookielabs.pasbuk.common.presentation.utils.isAtLeastO
 import dev.claucookielabs.pasbuk.passdownload.presentation.ui.PassDownloadActivity
 import dev.claucookielabs.pasbuk.passdownload.services.model.IntentScheme
-import org.json.JSONObject
 import org.koin.android.ext.android.inject
-import java.io.BufferedOutputStream
 import java.io.File
-import java.io.FileOutputStream
 import java.io.InputStream
+import java.net.URI
 import java.util.zip.ZipEntry
+import java.util.zip.ZipFile
 import java.util.zip.ZipInputStream
 
 
@@ -34,117 +35,10 @@ class PassDownloadService : IntentService("PassDownloadService") {
                 Log.i("Info", "Download Service downloading file")
                 intentData = intentDataProvider.downloadFile(it.uri.toString())
             }
-            unzipFile(intentData)
+            val networkPassbook = unzipFile(intentData)
+            networkPassbook?.pkpassFile = intentData.uri.path ?: ""
+            Log.i("Info", "Download Service downloaded an unzipped file ${networkPassbook?.pkpassFile}")
         }
-    }
-
-    private fun unzipFile(intentScheme: IntentScheme) {
-        Log.i("Info", "Download Service unzip")
-        if (intentScheme == IntentScheme.NotFound) return
-        Log.i("Info", "Download Service unzipping")
-        val attachment: InputStream = contentResolver.openInputStream(intentScheme.uri)!!
-        val json = unzipInputStream(this, attachment)
-        Log.i("Info", json.toString())
-    }
-
-    private fun unzipInputStream(
-        context: Context,
-        inputStream: InputStream
-    ): JSONObject? {
-        var pass: JSONObject? = JSONObject()
-        var logoBytes: ByteArray? = null
-        var backgroundBytes: ByteArray? = null
-        var stripBytes: ByteArray? = null
-        var thumbnailBytes: ByteArray? = null
-        try {
-            val zis = ZipInputStream(inputStream)
-            var entry: ZipEntry
-            // Read folder files
-            while (zis.nextEntry.also { entry = it } != null) {
-                val filename = entry.name
-                if (filename == "pass.json") {
-                    val s = StringBuilder()
-                    var read = 0
-                    val buffer = ByteArray(1024)
-                    while (zis.read(buffer, 0, 1024).also { read = it } >= 0) s.append(
-                        String(
-                            buffer,
-                            0,
-                            read
-                        )
-                    )
-                    var passInfo = s.toString()
-                    // Trying to correct some format errors like ",}" "},]"
-                    passInfo = passInfo.replace("\\,\\s*\\}".toRegex(), " }")
-                    passInfo = passInfo.replace("\\},\\s*\\]".toRegex(), "} ]")
-                    pass = JSONObject(passInfo)
-                } else if (logoBytes == null && filename == "logo.png") { // Get logo 1x just if logo bytes is not fetted yet, other wise, take 2x logo
-                    logoBytes = getBytesFromFileInsizeZip(zis, filename)
-                } else if (filename == "logo@2x.png") {
-                    logoBytes = getBytesFromFileInsizeZip(zis, filename)
-                } else if (filename == "background.png") {
-                    backgroundBytes = getBytesFromFileInsizeZip(zis, filename)
-                } else if (filename == "thumbnail.png") {
-                    thumbnailBytes = getBytesFromFileInsizeZip(zis, filename)
-                } else if (filename == "strip.png") {
-                    stripBytes = getBytesFromFileInsizeZip(zis, filename)
-                }
-            }
-            inputStream.close()
-            if (pass != null) {
-                saveImagesToInternalStorage(
-                    context,
-                    pass,
-                    logoBytes,
-                    backgroundBytes,
-                    stripBytes,
-                    thumbnailBytes
-                )
-            }
-
-        } catch (e: Exception) {
-            Log.e("Error", "Download Service " + e.message)
-        }
-        Log.i("Info", "Download Service json pass created")
-        return pass
-    }
-
-    private fun getBytesFromFileInsizeZip(
-        zis: ZipInputStream,
-        filename: String
-    ): ByteArray? {
-        if (filename.isNotEmpty()) {
-            return intentDataProvider.readInputStream(zis)
-        }
-        return null
-    }
-
-    private fun saveImagesToInternalStorage(
-        context: Context?,
-        pass: JSONObject,
-        logoBytes: ByteArray?,
-        backgroundBytes: ByteArray?,
-        stripBytes: ByteArray?,
-        thumbnailBytes: ByteArray?
-    ): JSONObject? {
-        var pass: JSONObject? = pass
-        // For later
-        return pass
-    }
-
-    private fun createImageFileAndGetPath(
-        imagesDir: String,
-        imageName: String,
-        imageBytes: ByteArray?
-    ): String? {
-        val storage = File(filesDir.absolutePath + imagesDir + imageName)
-        if (storage.mkdirs()) {
-            val bos = BufferedOutputStream(FileOutputStream(storage))
-            bos.write(imageBytes)
-            bos.flush()
-            bos.close()
-        }
-        return storage.absolutePath
     }
 
     override fun onCreate() {
@@ -155,6 +49,53 @@ class PassDownloadService : IntentService("PassDownloadService") {
     override fun onDestroy() {
         Log.i("Info", "Download Service onDestroy")
         super.onDestroy()
+    }
+
+    private fun unzipFile(intentScheme: IntentScheme): NetworkPassbook? {
+        if (intentScheme == IntentScheme.NotFound) return null
+        Log.i("Info", "Download Service unzipping")
+        val downloadedFileInputStream: InputStream =
+            contentResolver.openInputStream(intentScheme.uri)!!
+        val zipFile = ZipFile(File(URI.create(intentScheme.uri.toString())))
+        val passEntry = zipFile.getEntry("pass.json")
+        val passInputStream = zipFile.getInputStream(passEntry)
+        val passContent =
+            intentDataProvider.readStringBuilderFromInputStream(passInputStream).toString()
+                .apply {
+                    // Trying to correct some format errors like ",}" "},]"
+                    replace("\\,\\s*\\}".toRegex(), " }")
+                    replace("\\},\\s*\\]".toRegex(), "} ]")
+                }
+        var passbook = Gson().fromJson(passContent, NetworkPassbook::class.java)
+        Log.i("Info", passContent)
+        return unzipImages(downloadedFileInputStream, passbook)
+    }
+
+    private fun unzipImages(inputStream: InputStream, passbook: NetworkPassbook): NetworkPassbook {
+        try {
+            val zis = ZipInputStream(inputStream)
+            var entry: ZipEntry?
+            while (null != zis.nextEntry.also { entry = it }) {
+                when (entry!!.name) {
+                    "logo.png", "logo@2x.png", "background.png", "thumbnail.png", "strip.png" -> {
+                        val imgBytes = intentDataProvider.readBytesFromInputStream(zis)
+                        val imgPath = intentDataProvider.createImageFileAndGetPath(
+                            this,
+                            passbook.serialNumber,
+                            entry!!.name,
+                            imgBytes
+                        )
+                        passbook.setImage(entry!!.name, imgPath ?: "")
+                    }
+                }
+            }
+            zis.close()
+            inputStream.close()
+        } catch (e: Exception) {
+            Log.e("Error", "Download Service " + e.message)
+        }
+        Log.i("Info", "Download Service json pass created")
+        return passbook
     }
 
     private fun createNotification(contentName: String): Notification {
