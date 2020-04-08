@@ -97,6 +97,16 @@ data class NetworkPassbook(
             STRIP_FILENAME -> stripImage = imgPath
         }
     }
+
+    fun containsImageNamed(name: String): Boolean {
+        return listOf(
+            LOGO_FILENAME,
+            LOGO2X_FILENAME,
+            BACKGROUND_FILENAME,
+            THUMBNAIL_FILENAME,
+            STRIP_FILENAME
+        ).contains(name)
+    }
 }
 
 private const val LOGO_FILENAME = "logo.png"

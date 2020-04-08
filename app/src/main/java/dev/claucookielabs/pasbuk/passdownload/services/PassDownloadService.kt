@@ -14,7 +14,6 @@ import dev.claucookielabs.pasbuk.common.presentation.utils.isAtLeastO
 import dev.claucookielabs.pasbuk.passdownload.presentation.ui.PassDownloadActivity
 import dev.claucookielabs.pasbuk.passdownload.services.model.IntentScheme
 import org.koin.android.ext.android.inject
-import java.io.InputStream
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
 import java.util.zip.ZipInputStream
@@ -40,41 +39,36 @@ class PassDownloadService : IntentService("PassDownloadService") {
 
     private fun unzipFile(intentScheme: IntentScheme): NetworkPassbook? {
         if (intentScheme == IntentScheme.NotFound) return null
-        Log.i("Info", "Download Service unzipping")
-        val downloadedFileInputStream: InputStream =
-            contentResolver.openInputStream(intentScheme.uri)!!
         val file = intentDataProvider.retrieveFile(this, intentScheme)
         val zipFile = ZipFile(file)
         val passEntry = zipFile.getEntry("pass.json")
-        val passInputStream = zipFile.getInputStream(passEntry)
-        val passContent =
-            intentDataProvider.readStringBuilderFromInputStream(passInputStream).toString()
-                .apply {
-                    // Trying to correct some format errors like ",}" "},]"
-                    replace("\\,\\s*\\}".toRegex(), " }")
-                    replace("\\},\\s*\\]".toRegex(), "} ]")
-                }
-        val passbook = Gson().fromJson(passContent, NetworkPassbook::class.java)
-        Log.i("Info", passContent)
-        return unzipImages(downloadedFileInputStream, passbook)
+        zipFile.getInputStream(passEntry).use {
+            var passbook: NetworkPassbook?
+            val pass = intentDataProvider.readPassContentFromInputStream(it)
+            passbook = Gson().fromJson(pass, NetworkPassbook::class.java)
+            passbook = unzipAndSetImages(intentScheme, passbook)
+            Log.i("Info", pass)
+            return passbook
+        }
     }
 
-    private fun unzipImages(inputStream: InputStream, passbook: NetworkPassbook): NetworkPassbook {
-        inputStream.use { inputStream ->
+    private fun unzipAndSetImages(
+        intentScheme: IntentScheme,
+        passbook: NetworkPassbook
+    ): NetworkPassbook {
+        contentResolver.openInputStream(intentScheme.uri)?.use { inputStream ->
             ZipInputStream(inputStream).use { zis ->
                 var entry: ZipEntry?
                 while (null != zis.nextEntry.also { entry = it }) {
-                    when (entry!!.name) {
-                        "logo.png", "logo@2x.png", "background.png", "thumbnail.png", "strip.png" -> {
-                            val imgBytes = intentDataProvider.readBytesFromInputStream(zis)
-                            val imgPath = intentDataProvider.createImageFileAndGetPath(
-                                this,
-                                passbook.serialNumber,
-                                entry!!.name,
-                                imgBytes
-                            )
-                            passbook.setImage(entry!!.name, imgPath ?: "")
-                        }
+                    if (passbook.containsImageNamed(entry!!.name)) {
+                        val imgBytes = intentDataProvider.readBytesFromInputStream(zis)
+                        val imgPath = intentDataProvider.createImageFileAndGetPath(
+                            this,
+                            passbook.serialNumber,
+                            entry!!.name,
+                            imgBytes
+                        )
+                        passbook.setImage(entry!!.name, imgPath ?: "")
                     }
                 }
             }
@@ -103,12 +97,11 @@ class PassDownloadService : IntentService("PassDownloadService") {
 
     private fun createNotificationChannel(): String {
         if (isAtLeastO()) {
-            val channel =
-                NotificationChannel(
-                    NOTIFICATION_CHANNEL_ID,
-                    NOTIFICATION_CHANNEL_NAME,
-                    NotificationManager.IMPORTANCE_LOW
-                )
+            val channel = NotificationChannel(
+                NOTIFICATION_CHANNEL_ID,
+                NOTIFICATION_CHANNEL_NAME,
+                NotificationManager.IMPORTANCE_LOW
+            )
             channel.lightColor = R.color.colorAccent
             channel.lockscreenVisibility = Notification.VISIBILITY_PRIVATE
             val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

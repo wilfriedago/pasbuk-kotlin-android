@@ -28,10 +28,10 @@ class IntentDataProvider {
             val stream = DataInputStream(u.openStream())
             val buffer = readBytesFromInputStream(stream)
             val tempFile = File.createTempFile("pasbuk_", ".pkpass")
-            val fos = DataOutputStream(FileOutputStream(tempFile))
-            fos.write(buffer)
-            fos.flush()
-            fos.close()
+            DataOutputStream(FileOutputStream(tempFile)).use {
+                it.write(buffer)
+                it.flush()
+            }
             IntentScheme.File(Uri.parse(tempFile.toURI().toString()))
         } catch (e: FileNotFoundException) {
             IntentScheme.NotFound
@@ -53,14 +53,18 @@ class IntentDataProvider {
         return fileBytes
     }
 
-    fun readStringBuilderFromInputStream(stream: InputStream): StringBuilder {
+    fun readPassContentFromInputStream(stream: InputStream): String {
         val stringBuilder = StringBuilder()
-        var read = 0
+        var read: Int
         val buffer = ByteArray(1024)
         while (stream.read(buffer, 0, 1024).also { read = it } >= 0) {
             stringBuilder.append(String(buffer, 0, read))
         }
-        return stringBuilder
+        return stringBuilder.toString().apply {
+            // Trying to correct some format errors like ",}" "},]"
+            replace("\\,\\s*\\}".toRegex(), " }")
+            replace("\\},\\s*\\]".toRegex(), "} ]")
+        }
     }
 
     fun createImageFileAndGetPath(
