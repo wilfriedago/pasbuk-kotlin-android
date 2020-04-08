@@ -22,7 +22,7 @@ import java.util.zip.ZipInputStream
 
 class PassDownloadService : IntentService("PassDownloadService") {
 
-    private val intentDataProvider: IntentContentProvider by inject()
+    private val intentDataProvider: IntentDataProvider by inject()
 
     override fun onHandleIntent(intent: Intent?) {
         Log.i("Info", "Download Service onHandleIntent")

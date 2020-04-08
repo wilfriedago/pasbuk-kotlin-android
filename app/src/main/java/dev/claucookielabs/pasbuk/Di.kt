@@ -4,7 +4,7 @@ import dev.claucookielabs.pasbuk.common.data.repository.PassesRepository
 import dev.claucookielabs.pasbuk.passdetail.presentation.PassDetailViewModel
 import dev.claucookielabs.pasbuk.passdetail.presentation.ui.PassDetailActivity
 import dev.claucookielabs.pasbuk.passdownload.presentation.ui.PassDownloadActivity
-import dev.claucookielabs.pasbuk.passdownload.services.IntentContentProvider
+import dev.claucookielabs.pasbuk.passdownload.services.IntentDataProvider
 import dev.claucookielabs.pasbuk.passdownload.services.PassDownloadService
 import dev.claucookielabs.pasbuk.passlist.domain.GetAllPasses
 import dev.claucookielabs.pasbuk.passlist.presentation.PassListViewModel
@@ -27,7 +27,7 @@ fun App.initKoin() {
 
 private val appModule = module {
     single { PassesRepository() }
-    single { IntentContentProvider() }
+    single { IntentDataProvider() }
 }
 
 private val scopedModule = module {

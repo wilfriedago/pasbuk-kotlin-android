@@ -9,7 +9,7 @@ import java.io.*
 import java.net.URL
 
 
-class IntentContentProvider {
+class IntentDataProvider {
 
     fun parse(data: Uri?): IntentScheme {
         return data?.scheme?.let {
