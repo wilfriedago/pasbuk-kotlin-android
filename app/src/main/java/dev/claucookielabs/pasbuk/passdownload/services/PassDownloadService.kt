@@ -14,9 +14,7 @@ import dev.claucookielabs.pasbuk.common.presentation.utils.isAtLeastO
 import dev.claucookielabs.pasbuk.passdownload.presentation.ui.PassDownloadActivity
 import dev.claucookielabs.pasbuk.passdownload.services.model.IntentScheme
 import org.koin.android.ext.android.inject
-import java.io.File
 import java.io.InputStream
-import java.net.URI
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
 import java.util.zip.ZipInputStream
@@ -29,26 +27,15 @@ class PassDownloadService : IntentService("PassDownloadService") {
     override fun onHandleIntent(intent: Intent?) {
         Log.i("Info", "Download Service onHandleIntent")
         intentDataProvider.parse(intent?.data).let {
+            // We tell the system this service is important
             startForeground(NOTIFICATION_ID, createNotification(it.filename))
             var intentData = it
             if (it.isStoredInServer()) {
-                Log.i("Info", "Download Service downloading file")
                 intentData = intentDataProvider.downloadFile(it.uri.toString())
             }
             val networkPassbook = unzipFile(intentData)
             networkPassbook?.pkpassFile = intentData.uri.path ?: ""
-            Log.i("Info", "Download Service downloaded an unzipped file ${networkPassbook?.pkpassFile}")
         }
-    }
-
-    override fun onCreate() {
-        super.onCreate()
-        Log.i("Info", "Download Service onCreate")
-    }
-
-    override fun onDestroy() {
-        Log.i("Info", "Download Service onDestroy")
-        super.onDestroy()
     }
 
     private fun unzipFile(intentScheme: IntentScheme): NetworkPassbook? {
@@ -56,7 +43,8 @@ class PassDownloadService : IntentService("PassDownloadService") {
         Log.i("Info", "Download Service unzipping")
         val downloadedFileInputStream: InputStream =
             contentResolver.openInputStream(intentScheme.uri)!!
-        val zipFile = ZipFile(File(URI.create(intentScheme.uri.toString())))
+        val file = intentDataProvider.retrieveFile(this, intentScheme)
+        val zipFile = ZipFile(file)
         val passEntry = zipFile.getEntry("pass.json")
         val passInputStream = zipFile.getInputStream(passEntry)
         val passContent =
@@ -66,35 +54,31 @@ class PassDownloadService : IntentService("PassDownloadService") {
                     replace("\\,\\s*\\}".toRegex(), " }")
                     replace("\\},\\s*\\]".toRegex(), "} ]")
                 }
-        var passbook = Gson().fromJson(passContent, NetworkPassbook::class.java)
+        val passbook = Gson().fromJson(passContent, NetworkPassbook::class.java)
         Log.i("Info", passContent)
         return unzipImages(downloadedFileInputStream, passbook)
     }
 
     private fun unzipImages(inputStream: InputStream, passbook: NetworkPassbook): NetworkPassbook {
-        try {
-            val zis = ZipInputStream(inputStream)
-            var entry: ZipEntry?
-            while (null != zis.nextEntry.also { entry = it }) {
-                when (entry!!.name) {
-                    "logo.png", "logo@2x.png", "background.png", "thumbnail.png", "strip.png" -> {
-                        val imgBytes = intentDataProvider.readBytesFromInputStream(zis)
-                        val imgPath = intentDataProvider.createImageFileAndGetPath(
-                            this,
-                            passbook.serialNumber,
-                            entry!!.name,
-                            imgBytes
-                        )
-                        passbook.setImage(entry!!.name, imgPath ?: "")
+        inputStream.use { inputStream ->
+            ZipInputStream(inputStream).use { zis ->
+                var entry: ZipEntry?
+                while (null != zis.nextEntry.also { entry = it }) {
+                    when (entry!!.name) {
+                        "logo.png", "logo@2x.png", "background.png", "thumbnail.png", "strip.png" -> {
+                            val imgBytes = intentDataProvider.readBytesFromInputStream(zis)
+                            val imgPath = intentDataProvider.createImageFileAndGetPath(
+                                this,
+                                passbook.serialNumber,
+                                entry!!.name,
+                                imgBytes
+                            )
+                            passbook.setImage(entry!!.name, imgPath ?: "")
+                        }
                     }
                 }
             }
-            zis.close()
-            inputStream.close()
-        } catch (e: Exception) {
-            Log.e("Error", "Download Service " + e.message)
         }
-        Log.i("Info", "Download Service json pass created")
         return passbook
     }
 

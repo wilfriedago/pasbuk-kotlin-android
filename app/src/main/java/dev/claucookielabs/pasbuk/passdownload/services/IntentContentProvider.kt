@@ -1,11 +1,13 @@
 package dev.claucookielabs.pasbuk.passdownload.services
 
+import android.content.ContentResolver.SCHEME_CONTENT
+import android.content.ContentResolver.SCHEME_FILE
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import dev.claucookielabs.pasbuk.passdownload.services.model.IntentScheme
 import java.io.*
 import java.net.URL
+
 
 class IntentContentProvider {
 
@@ -13,8 +15,8 @@ class IntentContentProvider {
         return data?.scheme?.let {
             when (it) {
                 "http", "https" -> IntentScheme.Http(data)
-                "content" -> IntentScheme.Scheme(data)
-                "file" -> IntentScheme.File(data)
+                SCHEME_CONTENT -> IntentScheme.Content(data)
+                SCHEME_FILE -> IntentScheme.File(data)
                 else -> IntentScheme.NotFound
             }
         } ?: IntentScheme.NotFound
@@ -39,18 +41,15 @@ class IntentContentProvider {
     }
 
     fun readBytesFromInputStream(stream: InputStream): ByteArray? {
-        var fileBytes: ByteArray?
-        val baos = ByteArrayOutputStream()
-        val buffer = ByteArray(1024)
-        var count: Int
-        try {
+        var fileBytes: ByteArray? = null
+        ByteArrayOutputStream().use {
+            val buffer = ByteArray(1024)
+            var count: Int
             while (stream.read(buffer).also { count = it } != -1) {
-                baos.write(buffer, 0, count)
+                it.write(buffer, 0, count)
             }
-        } catch (e: IOException) {
-            Log.e("Error", "Download Service " + e.message)
+            fileBytes = it.toByteArray()
         }
-        fileBytes = baos.toByteArray()
         return fileBytes
     }
 
@@ -73,12 +72,28 @@ class IntentContentProvider {
         val folder = File("${context.filesDir.absolutePath}/${imagesDir}")
         if (folder.exists() || folder.mkdirs()) {
             val file = File(folder.absolutePath, "/${imageName}")
-            val bos = BufferedOutputStream(FileOutputStream(file))
-            bos.write(imageBytes)
-            bos.flush()
-            bos.close()
+            BufferedOutputStream(FileOutputStream(file)).use {
+                it.write(imageBytes)
+                it.flush()
+            }
             return file.absolutePath
         }
         return null
+    }
+
+    fun retrieveFile(context: Context, intentScheme: IntentScheme): File {
+        val tempFile = File(context.cacheDir, "tempfile.pkpass")
+        context.contentResolver.openInputStream(intentScheme.uri)?.use { input ->
+            FileOutputStream(tempFile).use { output ->
+                val buffer = ByteArray(4 * 1024) // buffer size
+                while (true) {
+                    val byteCount = input.read(buffer)
+                    if (byteCount < 0) break
+                    output.write(buffer, 0, byteCount)
+                }
+                output.flush()
+            }
+        }
+        return tempFile
     }
 }

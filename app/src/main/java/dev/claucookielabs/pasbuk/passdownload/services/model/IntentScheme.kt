@@ -15,12 +15,11 @@ sealed class IntentScheme(open val uri: Uri) {
 
     open fun isStoredInServer() = false
 
-
     data class Http(override val uri: Uri) : IntentScheme(uri) {
         override fun isStoredInServer(): Boolean = Patterns.WEB_URL.matcher(uri.toString()).matches()
     }
 
-    data class Scheme(override val uri: Uri) : IntentScheme(uri)
+    data class Content(override val uri: Uri) : IntentScheme(uri)
 
     data class File(override val uri: Uri) : IntentScheme(uri)
 
