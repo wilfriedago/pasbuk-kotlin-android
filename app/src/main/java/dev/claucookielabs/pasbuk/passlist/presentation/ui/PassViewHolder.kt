@@ -51,7 +51,7 @@ class PassViewHolder(
         val headerText = TextView(itemView.context, null, 0, R.style.Body1)
         headerText.gravity = Gravity.END
         headerText.textAlignment = View.TEXT_ALIGNMENT_VIEW_END
-        headerText.typeface = ResourcesCompat.getFont(itemView.context, R.font.product_sans)
+//        headerText.typeface = ResourcesCompat.getFont(itemView.context, R.font.product_sans)
         headerText.text = buildSpannedString {
             bold { appendln(header.label) }
             scale(SCALE_FACTOR) { append(header.value) }

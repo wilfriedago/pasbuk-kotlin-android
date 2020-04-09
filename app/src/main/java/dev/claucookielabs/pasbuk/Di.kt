@@ -1,8 +1,15 @@
 package dev.claucookielabs.pasbuk
 
+import androidx.preference.PreferenceManager
+import com.google.gson.Gson
+import dev.claucookielabs.pasbuk.common.data.datasource.PassesDatasource
+import dev.claucookielabs.pasbuk.common.data.datasource.local.SessionPrefsDataSource
 import dev.claucookielabs.pasbuk.common.data.repository.PassesRepository
 import dev.claucookielabs.pasbuk.passdetail.presentation.PassDetailViewModel
 import dev.claucookielabs.pasbuk.passdetail.presentation.ui.PassDetailActivity
+import dev.claucookielabs.pasbuk.passdownload.presentation.ui.PassDownloadActivity
+import dev.claucookielabs.pasbuk.passdownload.services.IntentDataHelper
+import dev.claucookielabs.pasbuk.passdownload.services.PassDownloadService
 import dev.claucookielabs.pasbuk.passlist.domain.GetAllPasses
 import dev.claucookielabs.pasbuk.passlist.presentation.PassListViewModel
 import dev.claucookielabs.pasbuk.passlist.presentation.ui.PassListActivity
@@ -23,7 +30,11 @@ fun App.initKoin() {
 }
 
 private val appModule = module {
-    single { PassesRepository() }
+    single { PassesRepository(get()) }
+    single { IntentDataHelper() }
+    single { Gson() }
+    single { PreferenceManager.getDefaultSharedPreferences(androidContext()) }
+    single<PassesDatasource> { SessionPrefsDataSource(get(), get()) }
 }
 
 private val scopedModule = module {
@@ -34,5 +45,13 @@ private val scopedModule = module {
 
     scope(named<PassDetailActivity>()) {
         viewModel { PassDetailViewModel() }
+    }
+
+    scope(named<PassDownloadActivity>()) {
+
+    }
+
+    scope(named<PassDownloadService>()) {
+
     }
 }

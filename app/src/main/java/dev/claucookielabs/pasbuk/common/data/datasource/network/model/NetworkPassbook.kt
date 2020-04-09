@@ -64,11 +64,11 @@ data class NetworkPassbook(
     val event: NetworkPass? = null,
     val generic: NetworkPass? = null,
     val storeCard: NetworkPass? = null,
-    val logoImage: String? = null,
-    val backgroundImage: String? = null,
-    val stripImage: String? = null,
-    val thumbnailImage: String? = null,
-    val pkpassFile: String
+    var logoImage: String? = null,
+    var backgroundImage: String? = null,
+    var stripImage: String? = null,
+    var thumbnailImage: String? = null,
+    var pkpassFile: String
 ) : Parcelable {
     val headers: List<NetworkInfoField>
         // Since we are hardcoding the passes for now, we know it is a boarding pass
@@ -86,4 +86,31 @@ data class NetworkPassbook(
     val auxiliaryFields: List<NetworkInfoField>
         // Since we are hardcoding the passes for now, we know it is a boarding pass
         get() = boardingPass!!.auxiliaryFields
+
+
+    fun setImage(name: String, imgPath: String) {
+        when (name) {
+            LOGO_FILENAME -> if (logoImage == null) logoImage = imgPath
+            LOGO2X_FILENAME -> logoImage = imgPath
+            BACKGROUND_FILENAME -> backgroundImage = imgPath
+            THUMBNAIL_FILENAME -> thumbnailImage = imgPath
+            STRIP_FILENAME -> stripImage = imgPath
+        }
+    }
+
+    fun containsImageNamed(name: String): Boolean {
+        return listOf(
+            LOGO_FILENAME,
+            LOGO2X_FILENAME,
+            BACKGROUND_FILENAME,
+            THUMBNAIL_FILENAME,
+            STRIP_FILENAME
+        ).contains(name)
+    }
 }
+
+private const val LOGO_FILENAME = "logo.png"
+private const val LOGO2X_FILENAME = "logo@2x.png"
+private const val BACKGROUND_FILENAME = "background.png"
+private const val THUMBNAIL_FILENAME = "thumbnail.png"
+private const val STRIP_FILENAME = "strip.png"
