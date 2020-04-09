@@ -11,14 +11,11 @@ class SessionPrefsDataSource(
 
     /**
      * This method saves the pass in the shared preferences.
-     * 
+     *
      * @return False if the pass already exists, True otherwise
      */
     override fun savePass(networkPassbook: NetworkPassbook): Boolean {
-        val passesSerialized = sharedPrefs.getString("passes", "[]")
-        val passesList = mutableListOf<NetworkPassbook>()
-        passesList.addAll(gson.fromJson(passesSerialized, Array<NetworkPassbook>::class.java))
-
+        val passesList = getPasses().toMutableList()
         if (passesList.none { it.serialNumber == networkPassbook.serialNumber }) {
             passesList.add(networkPassbook)
             // Serialize and save
@@ -26,5 +23,12 @@ class SessionPrefsDataSource(
             return true
         }
         return false
+    }
+
+    override fun getPasses(): List<NetworkPassbook> {
+        val passesSerialized = sharedPrefs.getString("passes", "[]")
+        return mutableListOf<NetworkPassbook>().apply {
+            addAll(gson.fromJson(passesSerialized, Array<NetworkPassbook>::class.java))
+        }
     }
 }

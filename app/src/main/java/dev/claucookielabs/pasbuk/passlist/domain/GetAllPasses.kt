@@ -9,7 +9,7 @@ class GetAllPasses(private val passesRepository: PassesRepository) :
     UseCase<BaseRequest, List<Passbook>> {
 
     override suspend fun execute(request: BaseRequest): List<Passbook> {
-        return passesRepository.mockPasses()
+        return passesRepository.getPasses()
     }
 
 }

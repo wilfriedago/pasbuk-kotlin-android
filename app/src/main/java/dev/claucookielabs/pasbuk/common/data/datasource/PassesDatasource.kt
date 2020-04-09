@@ -5,4 +5,5 @@ import dev.claucookielabs.pasbuk.common.data.datasource.network.model.NetworkPas
 interface PassesDatasource {
 
     fun savePass(networkPassbook: NetworkPassbook) : Boolean
+    fun getPasses(): List<NetworkPassbook>
 }
