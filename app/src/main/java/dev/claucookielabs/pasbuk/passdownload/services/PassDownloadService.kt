@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import com.google.gson.Gson
 import dev.claucookielabs.pasbuk.R
 import dev.claucookielabs.pasbuk.common.data.datasource.network.model.NetworkPassbook
+import dev.claucookielabs.pasbuk.common.data.repository.PassesRepository
 import dev.claucookielabs.pasbuk.common.presentation.utils.isAtLeastO
 import dev.claucookielabs.pasbuk.passdownload.presentation.ui.PassDownloadActivity
 import dev.claucookielabs.pasbuk.passdownload.services.model.IntentScheme
@@ -21,30 +22,36 @@ import java.util.zip.ZipInputStream
 
 class PassDownloadService : IntentService("PassDownloadService") {
 
-    private val intentDataProvider: IntentDataProvider by inject()
+    private val intentDataHelper: IntentDataHelper by inject()
+    private val passesRepository: PassesRepository by inject()
 
     override fun onHandleIntent(intent: Intent?) {
         Log.i("Info", "Download Service onHandleIntent")
-        intentDataProvider.parse(intent?.data).let {
+        intentDataHelper.parse(intent?.data).let {
             // We tell the system this service is important
             startForeground(NOTIFICATION_ID, createNotification(it.filename))
             var intentData = it
             if (it.isStoredInServer()) {
-                intentData = intentDataProvider.downloadFile(it.uri.toString())
+                intentData = intentDataHelper.downloadFile(it.uri.toString())
             }
-            val networkPassbook = unzipFile(intentData)
-            networkPassbook?.pkpassFile = intentData.uri.path ?: ""
+            unzipFile(intentData)?.apply{
+                pkpassFile = intentData.uri.path ?: ""
+                // If false, the pass already exists
+                passesRepository.savePassbook(this)
+            }
+
+
         }
     }
 
     private fun unzipFile(intentScheme: IntentScheme): NetworkPassbook? {
         if (intentScheme == IntentScheme.NotFound) return null
-        val file = intentDataProvider.retrieveFile(this, intentScheme)
+        val file = intentDataHelper.retrieveFile(this, intentScheme)
         val zipFile = ZipFile(file)
         val passEntry = zipFile.getEntry("pass.json")
         zipFile.getInputStream(passEntry).use {
             var passbook: NetworkPassbook?
-            val pass = intentDataProvider.readPassContentFromInputStream(it)
+            val pass = intentDataHelper.readPassContentFromInputStream(it)
             passbook = Gson().fromJson(pass, NetworkPassbook::class.java)
             passbook = unzipAndSetImages(intentScheme, passbook)
             Log.i("Info", pass)
@@ -61,8 +68,8 @@ class PassDownloadService : IntentService("PassDownloadService") {
                 var entry: ZipEntry?
                 while (null != zis.nextEntry.also { entry = it }) {
                     if (passbook.containsImageNamed(entry!!.name)) {
-                        val imgBytes = intentDataProvider.readBytesFromInputStream(zis)
-                        val imgPath = intentDataProvider.createImageFileAndGetPath(
+                        val imgBytes = intentDataHelper.readBytesFromInputStream(zis)
+                        val imgPath = intentDataHelper.createImageFileAndGetPath(
                             this,
                             passbook.serialNumber,
                             entry!!.name,

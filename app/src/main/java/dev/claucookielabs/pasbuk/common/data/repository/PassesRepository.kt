@@ -1,9 +1,10 @@
 package dev.claucookielabs.pasbuk.common.data.repository
 
+import dev.claucookielabs.pasbuk.common.data.datasource.PassesDatasource
 import dev.claucookielabs.pasbuk.common.data.datasource.network.model.*
 import dev.claucookielabs.pasbuk.common.domain.model.*
 
-class PassesRepository {
+class PassesRepository(private val passesDatasource: PassesDatasource) {
 
     fun mockPasses(): List<Passbook> {
         return listOfPasses().map {
@@ -210,5 +211,9 @@ class PassesRepository {
             pkpassFile = "/balblabla/path/201911251200.pkpass"
         )
     )
+
+    fun savePassbook(networkPassbook: NetworkPassbook): Boolean {
+        return passesDatasource.savePass(networkPassbook)
+    }
 }
 
