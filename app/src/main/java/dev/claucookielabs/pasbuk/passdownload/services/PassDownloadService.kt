@@ -1,8 +1,11 @@
 package dev.claucookielabs.pasbuk.passdownload.services
 
 import android.app.*
+import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
+import android.os.ResultReceiver
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -28,19 +31,18 @@ class PassDownloadService : IntentService("PassDownloadService") {
     override fun onHandleIntent(intent: Intent?) {
         Log.i("Info", "Download Service onHandleIntent")
         intentDataHelper.parse(intent?.data).let {
+            val resultReceiver: ResultReceiver = intent!!.getParcelableExtra("receiver")
             // We tell the system this service is important
             startForeground(NOTIFICATION_ID, createNotification(it.filename))
-            var intentData = it
-            if (it.isStoredInServer()) {
-                intentData = intentDataHelper.downloadFile(it.uri.toString())
-            }
-            unzipFile(intentData)?.apply{
+            val intentData =
+                if (it.isStoredInServer()) intentDataHelper.downloadFile(it.uri.toString())
+                else it
+            unzipFile(intentData)?.apply {
                 pkpassFile = intentData.uri.path ?: ""
                 // If false, the pass already exists
                 passesRepository.savePassbook(this)
             }
-
-
+            resultReceiver.send(RESULT_OK, Bundle())
         }
     }
 
