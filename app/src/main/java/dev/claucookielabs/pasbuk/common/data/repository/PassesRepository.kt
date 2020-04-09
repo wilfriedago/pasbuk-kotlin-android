@@ -11,7 +11,7 @@ class PassesRepository(private val passesDatasource: PassesDatasource) {
             it.toDomain()
         }
     }
-    
+
     fun savePassbook(networkPassbook: NetworkPassbook): Boolean {
         return passesDatasource.savePass(networkPassbook)
     }
