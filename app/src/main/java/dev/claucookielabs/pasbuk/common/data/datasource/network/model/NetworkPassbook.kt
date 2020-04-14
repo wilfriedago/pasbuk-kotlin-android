@@ -70,23 +70,6 @@ data class NetworkPassbook(
     var thumbnailImage: String? = null,
     var pkpassFile: String
 ) : Parcelable {
-    val headers: List<NetworkInfoField>
-        // Since we are hardcoding the passes for now, we know it is a boarding pass
-        get() = boardingPass!!.headerFields
-
-    val primaryFields: List<NetworkInfoField>
-        // Since we are hardcoding the passes for now, we know it is a boarding pass
-        get() = boardingPass!!.primaryFields
-    val secondaryFields: List<NetworkInfoField>
-        // Since we are hardcoding the passes for now, we know it is a boarding pass
-        get() = boardingPass!!.secondaryFields
-    val backFields: List<NetworkInfoField>
-        // Since we are hardcoding the passes for now, we know it is a boarding pass
-        get() = boardingPass!!.backFields
-    val auxiliaryFields: List<NetworkInfoField>
-        // Since we are hardcoding the passes for now, we know it is a boarding pass
-        get() = boardingPass!!.auxiliaryFields
-
 
     fun setImage(name: String, imgPath: String) {
         when (name) {
@@ -106,6 +89,10 @@ data class NetworkPassbook(
             THUMBNAIL_FILENAME,
             STRIP_FILENAME
         ).contains(name)
+    }
+
+    fun getPassType(): String {
+        return ""
     }
 }
 

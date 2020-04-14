@@ -1,6 +1,7 @@
-package dev.claucookielabs.pasbuk.common.domain.model
+package dev.claucookielabs.pasbuk.common.data.datasource.network.model
 
 import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 /**
@@ -14,7 +15,7 @@ import kotlinx.android.parcel.Parcelize
  * @property changeMessage Format string for the alert text that is displayed when the pass is updated.
  * The format string must contain the escape %s, which is replaced with the field’s new value.
  * For example, Gate changed to %s.
- * @property dataDectectorTypes
+ * @property dataDetectorTypes
  * @property textAlignment "Alignment for the field’s contents. Must be one of the following values:
  * PKTextAlignmentLeft PKTextAlignmentCenter PKTextAlignmentRight PKTextAlignmentNatural.
  * The default value is natural alignment, which aligns the text appropriately based on its script direction.
@@ -23,39 +24,39 @@ import kotlinx.android.parcel.Parcelize
  * @property timeStyle The format for the time.
  */
 @Parcelize
-data class InfoField(
+data class NetworkInfoField(
     val key: String,
     val value: String,
-    val label: String,
-    val currencyCode: String? = null,
-    val attributedValue: String? = null,
-    val changeMessage: String? = null,
-    val dataDectectorTypes: List<String>? = emptyList(),
-    val textAlignment: TextAlignment = TextAlignment.Natural,
-    val dateStyle: DateStyle = DateStyle.ShortStyle,
-    val timeStyle: String? = null
-) : Parcelable {
+    val label: String?,
+    val currencyCode: String?,
+    val attributedValue: String?,
+    val changeMessage: String?,
+    val dataDetectorTypes: List<String>?,
+    val textAlignment: NetworkTextAlignment?,
+    val dateStyle: NetworkDateStyle?,
+    val timeStyle: NetworkDateStyle?
+) : Parcelable
 
-    companion object {
-        val EMPTY = InfoField(
-            key = "",
-            value = "",
-            label = ""
-        )
-    }
-}
-
-enum class TextAlignment(val alignmentName: String) {
+enum class NetworkTextAlignment(val alignmentName: String) {
+    @SerializedName("PKTextAlignmentLeft")
     Left("PKTextAlignmentLeft"),
+    @SerializedName("PKTextAlignmentCenter")
     Center("PKTextAlignmentCenter"),
+    @SerializedName("PKTextAlignmentRight")
     Right("PKTextAlignmentRight"),
+    @SerializedName("PKTextAlignmentNatural")
     Natural("PKTextAlignmentNatural")
 }
 
-enum class DateStyle(styleName: String) {
+enum class NetworkDateStyle(val styleName: String) {
+    @SerializedName("NSDateFormatterNoStyle")
     NoStyle("NSDateFormatterNoStyle"),
+    @SerializedName("NSDateFormatterShortStyle")
     ShortStyle("NSDateFormatterShortStyle"),
+    @SerializedName("NSDateFormatterMediumStyle")
     MediumStyle("NSDateFormatterMediumStyle"),
+    @SerializedName("NSDateFormatterLongStyle")
     LongStyle("NSDateFormatterLongStyle"),
+    @SerializedName("NSDateFormatterFullStyle")
     FullStyle("NSDateFormatterFullStyle")
 }

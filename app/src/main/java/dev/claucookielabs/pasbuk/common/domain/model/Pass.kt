@@ -26,10 +26,15 @@ data class Pass(
     val transitType: TransitType
 ) : Parcelable
 
-enum class TransitType(typeName: String) {
+enum class TransitType(val typeName: String) {
     Air("PKTransitTypeAir"),
     Boat("PKTransitTypeBoat"),
     Bus("PKTransitTypeBus"),
     Generic("PKTransitTypeGeneric"),
-    Train("PKTransitTypeTrain")
+    Train("PKTransitTypeTrain");
+
+    companion object {
+        fun fromName(name: String?): TransitType =
+            values().firstOrNull { it.typeName == name } ?: Generic
+    }
 }
