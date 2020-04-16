@@ -6,7 +6,9 @@ import android.util.Patterns
 /**
  * Examples:
  * https://www.dropbox.com/s/xv91k5bb2vvqh7l/easyjet.pkpass?dl=0
- * content://com.google.android.gm.sapi/claudiathebest15@gmail.com/message_attachment_external/%23thread-f%3A1662873246511674255/%23msg-f%3A1662873246511674255/0.1?account_type=com.google&mimeType=application%2Fvnd-com.apple.pkpass&rendition=1
+ * content://com.google.android.gm.sapi/claudiathebest15@gmail.com/message_attachment_external
+ * /%23thread-f%3A1662873246511674255/%23msg-f%3A1662873246511674255/0.1?account_type=com.googl
+ * e&mimeType=application%2Fvnd-com.apple.pkpass&rendition=1
  */
 sealed class IntentScheme(open val uri: Uri) {
 
@@ -16,7 +18,8 @@ sealed class IntentScheme(open val uri: Uri) {
     open fun isStoredInServer() = false
 
     data class Http(override val uri: Uri) : IntentScheme(uri) {
-        override fun isStoredInServer(): Boolean = Patterns.WEB_URL.matcher(uri.toString()).matches()
+        override fun isStoredInServer(): Boolean =
+            Patterns.WEB_URL.matcher(uri.toString()).matches()
     }
 
     data class Content(override val uri: Uri) : IntentScheme(uri)

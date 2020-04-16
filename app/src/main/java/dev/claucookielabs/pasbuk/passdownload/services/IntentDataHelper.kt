@@ -42,13 +42,13 @@ class IntentDataHelper {
 
     fun readBytesFromInputStream(stream: InputStream): ByteArray? {
         var fileBytes: ByteArray? = null
-        ByteArrayOutputStream().use {
-            val buffer = ByteArray(1024)
+        ByteArrayOutputStream().use { outpuStream ->
+            val buffer = ByteArray(BUFFER_SIZE)
             var count: Int
-            while (stream.read(buffer).also { count = it } != -1) {
-                it.write(buffer, 0, count)
+            while (stream.read(buffer).also { count = it } != END_OF_STREAM) {
+                outpuStream.write(buffer, ZERO_POS, count)
             }
-            fileBytes = it.toByteArray()
+            fileBytes = outpuStream.toByteArray()
         }
         return fileBytes
     }
@@ -56,9 +56,9 @@ class IntentDataHelper {
     fun readPassContentFromInputStream(stream: InputStream): String {
         val stringBuilder = StringBuilder()
         var read: Int
-        val buffer = ByteArray(1024)
-        while (stream.read(buffer, 0, 1024).also { read = it } >= 0) {
-            stringBuilder.append(String(buffer, 0, read))
+        val buffer = ByteArray(BUFFER_SIZE)
+        while (stream.read(buffer, ZERO_POS, BUFFER_SIZE).also { read = it } >= ZERO_POS) {
+            stringBuilder.append(String(buffer, ZERO_POS, read))
         }
         return stringBuilder.toString().apply {
             // Trying to correct some format errors like ",}" "},]"
@@ -89,11 +89,11 @@ class IntentDataHelper {
         val tempFile = File(context.cacheDir, "tempfile.pkpass")
         context.contentResolver.openInputStream(intentScheme.uri)?.use { input ->
             FileOutputStream(tempFile).use { output ->
-                val buffer = ByteArray(4 * 1024) // buffer size
+                val buffer = ByteArray(BLOCKS * BUFFER_SIZE)
                 while (true) {
                     val byteCount = input.read(buffer)
-                    if (byteCount < 0) break
-                    output.write(buffer, 0, byteCount)
+                    if (byteCount < ZERO_POS) break
+                    output.write(buffer, ZERO_POS, byteCount)
                 }
                 output.flush()
             }
@@ -101,3 +101,8 @@ class IntentDataHelper {
         return tempFile
     }
 }
+
+private const val BUFFER_SIZE = 1024
+private const val ZERO_POS = 0
+private const val BLOCKS = 4
+private const val END_OF_STREAM = -1
