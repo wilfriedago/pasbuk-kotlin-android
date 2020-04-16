@@ -23,13 +23,32 @@ data class Pass(
     val secondaryFields: List<InfoField>,
     val backFields: List<InfoField>,
     val auxiliaryFields: List<InfoField>,
-    val transitType: TransitType
+    val transitType: TransitType,
+    val passType: PassType
 ) : Parcelable
 
-enum class TransitType(typeName: String) {
+enum class TransitType(val typeName: String) {
     Air("PKTransitTypeAir"),
     Boat("PKTransitTypeBoat"),
     Bus("PKTransitTypeBus"),
     Generic("PKTransitTypeGeneric"),
-    Train("PKTransitTypeTrain")
+    Train("PKTransitTypeTrain");
+
+    companion object {
+        fun fromName(name: String?): TransitType =
+            values().firstOrNull { it.typeName == name } ?: Generic
+    }
+}
+
+enum class PassType(val typeName: String) {
+    BoardingPass("boardingPass"),
+    EventTicket("eventTicket"),
+    Coupon("coupon"),
+    StoreCard("storeCard"),
+    Generic("generic");
+
+    companion object {
+        fun fromName(name: String?): PassType =
+            values().firstOrNull { it.typeName == name } ?: Generic
+    }
 }

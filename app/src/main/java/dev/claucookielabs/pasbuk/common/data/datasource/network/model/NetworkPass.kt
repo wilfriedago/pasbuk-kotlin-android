@@ -1,6 +1,7 @@
 package dev.claucookielabs.pasbuk.common.data.datasource.network.model
 
 import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 
@@ -18,18 +19,23 @@ import kotlinx.android.parcel.Parcelize
  */
 @Parcelize
 data class NetworkPass(
-    val headerFields: List<NetworkInfoField>,
-    val primaryFields: List<NetworkInfoField>,
-    val secondaryFields: List<NetworkInfoField>,
-    val backFields: List<NetworkInfoField>,
-    val auxiliaryFields: List<NetworkInfoField>,
-    val transitType: NetworkTransitType
+    val headerFields: List<NetworkInfoField>?,
+    val primaryFields: List<NetworkInfoField>?,
+    val secondaryFields: List<NetworkInfoField>?,
+    val backFields: List<NetworkInfoField>?,
+    val auxiliaryFields: List<NetworkInfoField>?,
+    val transitType: NetworkTransitType?
 ) : Parcelable
 
-enum class NetworkTransitType(typeName: String) {
+enum class NetworkTransitType(val typeName: String) {
+    @SerializedName("PKTransitTypeAir")
     Air("PKTransitTypeAir"),
+    @SerializedName("PKTransitTypeBoat")
     Boat("PKTransitTypeBoat"),
+    @SerializedName("PKTransitTypeBus")
     Bus("PKTransitTypeBus"),
+    @SerializedName("PKTransitTypeGeneric")
     Generic("PKTransitTypeGeneric"),
+    @SerializedName("PKTransitTypeTrain")
     Train("PKTransitTypeTrain")
 }

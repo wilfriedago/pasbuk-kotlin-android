@@ -1,4 +1,4 @@
-package dev.claucookielabs.pasbuk.common.data.datasource.network.model
+package dev.claucookielabs.pasbuk.common.domain.model
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
@@ -14,7 +14,7 @@ import kotlinx.android.parcel.Parcelize
  * @property changeMessage Format string for the alert text that is displayed when the pass is updated.
  * The format string must contain the escape %s, which is replaced with the field’s new value.
  * For example, Gate changed to %s.
- * @property dataDectectorTypes
+ * @property dataDetectorTypes
  * @property textAlignment "Alignment for the field’s contents. Must be one of the following values:
  * PKTextAlignmentLeft PKTextAlignmentCenter PKTextAlignmentRight PKTextAlignmentNatural.
  * The default value is natural alignment, which aligns the text appropriately based on its script direction.
@@ -23,30 +23,57 @@ import kotlinx.android.parcel.Parcelize
  * @property timeStyle The format for the time.
  */
 @Parcelize
-data class NetworkInfoField(
+data class InfoField(
     val key: String,
     val value: String,
     val label: String,
-    val currencyCode: String? = null,
-    val attributedValue: String? = null,
-    val changeMessage: String? = null,
-    val dataDectectorTypes: List<String>? = emptyList(),
-    val textAlignment: NetworkTextAlignment = NetworkTextAlignment.Natural,
-    val dateStyle: NetworkDateStyle = NetworkDateStyle.ShortStyle,
-    val timeStyle: String? = null
-) : Parcelable
+    val currencyCode: String?,
+    val attributedValue: String?,
+    val changeMessage: String?,
+    val dataDetectorTypes: List<String>,
+    val textAlignment: TextAlignment,
+    val dateStyle: DateStyle,
+    val timeStyle: DateStyle
+) : Parcelable {
 
-enum class NetworkTextAlignment(val alignmentName: String) {
+    companion object {
+        val EMPTY = InfoField(
+            key = "",
+            value = "",
+            label = "",
+            currencyCode = "",
+            attributedValue = "",
+            changeMessage = "",
+            dataDetectorTypes = emptyList(),
+            textAlignment = TextAlignment.Natural,
+            dateStyle = DateStyle.ShortStyle,
+            timeStyle = DateStyle.ShortStyle
+
+        )
+    }
+}
+
+enum class TextAlignment(val alignmentName: String) {
     Left("PKTextAlignmentLeft"),
     Center("PKTextAlignmentCenter"),
     Right("PKTextAlignmentRight"),
-    Natural("PKTextAlignmentNatural")
+    Natural("PKTextAlignmentNatural");
+
+    companion object {
+        fun fromName(name: String?): TextAlignment =
+            values().firstOrNull { it.alignmentName == name } ?: Natural
+    }
 }
 
-enum class NetworkDateStyle(styleName: String) {
+enum class DateStyle(val styleName: String) {
     NoStyle("NSDateFormatterNoStyle"),
     ShortStyle("NSDateFormatterShortStyle"),
     MediumStyle("NSDateFormatterMediumStyle"),
     LongStyle("NSDateFormatterLongStyle"),
-    FullStyle("NSDateFormatterFullStyle")
+    FullStyle("NSDateFormatterFullStyle");
+
+    companion object {
+        fun fromName(name: String?): DateStyle =
+            values().firstOrNull { it.styleName == name } ?: ShortStyle
+    }
 }

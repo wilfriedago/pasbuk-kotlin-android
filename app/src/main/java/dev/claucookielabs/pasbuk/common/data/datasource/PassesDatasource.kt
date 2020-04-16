@@ -1,9 +1,9 @@
 package dev.claucookielabs.pasbuk.common.data.datasource
 
-import dev.claucookielabs.pasbuk.common.data.datasource.network.model.NetworkPassbook
+import dev.claucookielabs.pasbuk.common.data.datasource.local.model.DbPassbook
 
 interface PassesDatasource {
 
-    fun savePass(networkPassbook: NetworkPassbook) : Boolean
-    fun getPasses(): List<NetworkPassbook>
+    fun savePass(networkPassbook: DbPassbook): Boolean
+    fun getPasses(): List<DbPassbook>
 }
