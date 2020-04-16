@@ -11,24 +11,23 @@ data class DbPassbook(
     @PrimaryKey val serialNumber: String,
     val teamIdentifier: String,
     val authenticationToken: String,
-    val webServiceURL: String? = null,
+    val webServiceURL: String?,
     val organizationName: String,
-    val description: String? = null,
-    @Embedded val barcode: DbBarcode? = null,
-    @Embedded  val location: DbLocation? = null,
-    val maxDistance: Int? = null,
-    val relevantDate: String? = null,
-    val updateDate: Long? = null,
-    val backgroundColor: String? = null,
-    val foregroundColor: String? = null,
-    val labelColor: String? = null,
-    val logoText: String? = null,
+    val description: String?,
+    @Embedded val barcode: DbBarcode?,
+    @Embedded  val location: DbLocation?,
+    val maxDistance: Int?,
+    val relevantDate: String?,
+    val updateDate: Long?,
+    val backgroundColor: String?,
+    val foregroundColor: String?,
+    val labelColor: String?,
+    val logoText: String?,
     @Embedded val pass: DbPass,
-    val passType: String, // Move this inside DbPass
-    val logoImage: String? = null,
-    val backgroundImage: String? = null,
-    val stripImage: String? = null,
-    val thumbnailImage: String? = null,
+    val logoImage: String?,
+    val backgroundImage: String?,
+    val stripImage: String?,
+    val thumbnailImage: String?,
     val pkpassFile: String
 )
 
@@ -42,7 +41,7 @@ data class DbBarcode(
 data class DbLocation(
     val latitude: Double,
     val longitude: Double,
-    val locationRelevantText: String? = null
+    val locationRelevantText: String?
 )
 
 data class DbPass(
@@ -51,7 +50,8 @@ data class DbPass(
     val secondaryFields: List<DbInfoField>,
     val backFields: List<DbInfoField>,
     val auxiliaryFields: List<DbInfoField>,
-    val transitType: String
+    val transitType: String,
+    val passType: String
 )
 
 data class DbInfoField(

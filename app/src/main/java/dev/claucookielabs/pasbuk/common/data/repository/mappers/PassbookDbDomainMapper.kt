@@ -22,13 +22,14 @@ fun DbPassbook.toDomain(): Passbook {
         foregroundColor = this.foregroundColor,
         labelColor = this.labelColor,
         logoText = this.logoText,
-        boardingPass = this.pass.toDomain(),
-        // Model all type of passes in one for Domain layer
+        pass = this.pass.toDomain(),
         logoImage = this.logoImage,
         backgroundImage = this.backgroundImage,
         stripImage = this.stripImage,
         thumbnailImage = this.thumbnailImage,
-        pkpassFile = this.pkpassFile
+        pkpassFile = this.pkpassFile,
+        iconImage = null,
+        footerImage = null
     )
 }
 
@@ -40,7 +41,8 @@ fun DbPass?.toDomain(): Pass {
         secondaryFields = this?.secondaryFields.toDomain(),
         backFields = this?.backFields.toDomain(),
         auxiliaryFields = this?.auxiliaryFields.toDomain(),
-        transitType = TransitType.fromName(this?.transitType)
+        transitType = TransitType.fromName(this?.transitType),
+        passType = PassType.fromName(this?.passType)
     )
 }
 

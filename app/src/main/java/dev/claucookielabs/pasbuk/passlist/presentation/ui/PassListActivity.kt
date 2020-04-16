@@ -10,8 +10,6 @@ import dev.claucookielabs.pasbuk.R
 import dev.claucookielabs.pasbuk.common.domain.model.Passbook
 import dev.claucookielabs.pasbuk.databinding.ActivityPassListBinding
 import dev.claucookielabs.pasbuk.passdetail.presentation.ui.PassDetailActivity
-import dev.claucookielabs.pasbuk.passdownload.presentation.ui.PassDownloadActivity
-import dev.claucookielabs.pasbuk.passdownload.services.PassDownloadService
 import dev.claucookielabs.pasbuk.passlist.presentation.PassListViewModel
 import kotlinx.android.synthetic.main.activity_pass_list.*
 import org.koin.androidx.scope.lifecycleScope
@@ -32,12 +30,9 @@ import org.koin.androidx.viewmodel.scope.viewModel
  */
 class PassListActivity : AppCompatActivity() {
 
-    private val passesAdapter =
-        PassListAdapter {
-            openPass(
-                it
-            )
-        }
+    private val passesAdapter = PassListAdapter {
+        openPass(it)
+    }
     private val passesViewModel: PassListViewModel by lifecycleScope.viewModel(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {

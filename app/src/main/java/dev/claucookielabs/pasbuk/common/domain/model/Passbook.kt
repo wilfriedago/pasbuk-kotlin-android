@@ -29,11 +29,7 @@ import kotlinx.android.parcel.Parcelize
  * @property foregroundColor
  * @property labelColor
  * @property logoText
- * @property boardingPass
- * @property coupon
- * @property event
- * @property generic
- * @property storeCard
+ * @property pass
  * @property logoImage
  * @property backgroundImage Image url used for events.
  * @property stripImage Image url used for coupons.
@@ -47,43 +43,41 @@ data class Passbook(
     val passTypeIdentifier: String,
     val teamIdentifier: String,
     val authenticationToken: String,
-    val webServiceURL: String? = null,
+    val webServiceURL: String?,
     val organizationName: String,
-    val description: String? = null,
-    val barcode: Barcode? = null,
-    val location: Location? = null,
-    val maxDistance: Int? = null,
-    val relevantDate: String? = null,
-    val updateDate: Long? = null,
-    val backgroundColor: String? = null,
-    val foregroundColor: String? = null,
-    val labelColor: String? = null,
-    val logoText: String? = null,
-    val boardingPass: Pass? = null,
-    val coupon: Pass? = null,
-    val event: Pass? = null,
-    val generic: Pass? = null,
-    val storeCard: Pass? = null,
-    val logoImage: String? = null,
-    val backgroundImage: String? = null,
-    val stripImage: String? = null,
-    val thumbnailImage: String? = null,
+    val description: String?,
+    val barcode: Barcode?,
+    val location: Location?,
+    val maxDistance: Int?,
+    val relevantDate: String?,
+    val updateDate: Long?,
+    val backgroundColor: String?,
+    val foregroundColor: String?,
+    val labelColor: String?,
+    val logoText: String?,
+    val pass: Pass,
+    val iconImage: String?,
+    val logoImage: String?,
+    val backgroundImage: String?,
+    val stripImage: String?,
+    val thumbnailImage: String?,
+    val footerImage: String?,
     val pkpassFile: String
 ) : Parcelable {
     val headers: List<InfoField>
         // Since we are hardcoding the passes for now, we know it is a boarding pass
-        get() = boardingPass!!.headerFields
+        get() = pass.headerFields
 
     val primaryFields: List<InfoField>
         // Since we are hardcoding the passes for now, we know it is a boarding pass
-        get() = boardingPass!!.primaryFields
+        get() = pass.primaryFields
     val secondaryFields: List<InfoField>
         // Since we are hardcoding the passes for now, we know it is a boarding pass
-        get() = boardingPass!!.secondaryFields
+        get() = pass.secondaryFields
     val backFields: List<InfoField>
         // Since we are hardcoding the passes for now, we know it is a boarding pass
-        get() = boardingPass!!.backFields
+        get() = pass.backFields
     val auxiliaryFields: List<InfoField>
         // Since we are hardcoding the passes for now, we know it is a boarding pass
-        get() = boardingPass!!.auxiliaryFields
+        get() = pass.auxiliaryFields
 }

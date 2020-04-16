@@ -19,6 +19,7 @@ import dev.claucookielabs.pasbuk.passdownload.presentation.ui.PassDownloadActivi
 import dev.claucookielabs.pasbuk.passdownload.services.model.IntentScheme
 import org.koin.android.ext.android.inject
 import java.util.zip.ZipEntry
+import java.util.zip.ZipException
 import java.util.zip.ZipFile
 import java.util.zip.ZipInputStream
 
@@ -49,15 +50,20 @@ class PassDownloadService : IntentService("PassDownloadService") {
     private fun unzipFile(intentScheme: IntentScheme): NetworkPassbook? {
         if (intentScheme == IntentScheme.NotFound) return null
         val file = intentDataHelper.retrieveFile(this, intentScheme)
-        val zipFile = ZipFile(file)
-        val passEntry = zipFile.getEntry("pass.json")
-        zipFile.getInputStream(passEntry).use {
-            var passbook: NetworkPassbook?
-            val pass = intentDataHelper.readPassContentFromInputStream(it)
-            passbook = Gson().fromJson(pass, NetworkPassbook::class.java)
-            passbook = unzipAndSetImages(intentScheme, passbook)
-            Log.i("Info", pass)
-            return passbook
+        try {
+            val zipFile = ZipFile(file)
+            val passEntry = zipFile.getEntry("pass.json")
+            zipFile.getInputStream(passEntry).use {
+                var passbook: NetworkPassbook?
+                val pass = intentDataHelper.readPassContentFromInputStream(it)
+                passbook = Gson().fromJson(pass, NetworkPassbook::class.java)
+                passbook = unzipAndSetImages(intentScheme, passbook)
+                Log.i("Info", pass)
+                return passbook
+            }
+        } catch (exception: ZipException) {
+            Log.e(javaClass.simpleName, file.name + ": The file is not a zipped file, " + exception.message)
+            return null
         }
     }
 

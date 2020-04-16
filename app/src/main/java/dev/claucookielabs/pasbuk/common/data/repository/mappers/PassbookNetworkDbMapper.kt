@@ -22,9 +22,7 @@ fun NetworkPassbook.toDb(): DbPassbook {
         foregroundColor = this.foregroundColor,
         labelColor = this.labelColor,
         logoText = this.logoText,
-        pass = this.boardingPass.toDb(),
-        passType = this.getPassType(),
-        // Model all type of passes in one for Domain layer
+        pass = this.passToDb(boardingPass, coupon, eventTicket, generic, storeCard),
         logoImage = this.logoImage,
         backgroundImage = this.backgroundImage,
         stripImage = this.stripImage,
@@ -33,15 +31,30 @@ fun NetworkPassbook.toDb(): DbPassbook {
     )
 }
 
+private fun NetworkPassbook.passToDb(
+    boardingPass: NetworkPass?,
+    coupon: NetworkPass?,
+    eventTicket: NetworkPass?,
+    generic: NetworkPass?,
+    storeCard: NetworkPass?
+): DbPass {
+    return boardingPass?.toDb("boardingPass")
+        ?: (coupon?.toDb("coupon")
+            ?: (eventTicket?.toDb("eventTicket")
+                ?: (storeCard?.toDb("storeCard")
+                    ?: generic.toDb("generic"))))
 
-fun NetworkPass?.toDb(): DbPass {
+}
+
+fun NetworkPass?.toDb(passTypeName: String): DbPass {
     return DbPass(
         headerFields = this?.headerFields.toDb(),
         primaryFields = this?.primaryFields.toDb(),
         secondaryFields = this?.secondaryFields.toDb(),
         backFields = this?.backFields.toDb(),
         auxiliaryFields = this?.auxiliaryFields.toDb(),
-        transitType = this?.transitType?.typeName ?: ""
+        transitType = this?.transitType?.typeName ?: "",
+        passType = passTypeName
     )
 }
 

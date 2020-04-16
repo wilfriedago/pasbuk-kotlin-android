@@ -31,7 +31,7 @@ import kotlinx.android.parcel.Parcelize
  * @property logoText
  * @property boardingPass
  * @property coupon
- * @property event
+ * @property eventTicket
  * @property generic
  * @property storeCard
  * @property logoImage
@@ -61,7 +61,7 @@ data class NetworkPassbook(
     val logoText: String? = null,
     val boardingPass: NetworkPass? = null,
     val coupon: NetworkPass? = null,
-    val event: NetworkPass? = null,
+    val eventTicket: NetworkPass? = null,
     val generic: NetworkPass? = null,
     val storeCard: NetworkPass? = null,
     var logoImage: String? = null,
